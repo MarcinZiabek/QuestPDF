@@ -1,0 +1,1431 @@
+assembly QuestPDF 2026.7.1.0
+
+static-class QuestPDF.Companion.CompanionExtensions  => generated
+  extension ShowInCompanion(this document: QuestPDF.Infrastructure.IDocument, port: System.Int32 = 12500) -> System.Void [doc]  => generated
+  extension ShowInCompanionAsync(this document: QuestPDF.Infrastructure.IDocument, port: System.Int32 = 12500, cancellationToken: System.Threading.CancellationToken = default) -> System.Threading.Tasks.Task [doc]  => unsupported: asynchronous surface (Task/CancellationToken); the bridge is synchronous and the sync overload is generated
+
+class QuestPDF.Drawing.Exceptions.DocumentComposeException : System.Exception implements System.Runtime.Serialization.ISerializable [internal-ctor]  => generated
+
+class QuestPDF.Drawing.Exceptions.DocumentDrawingException : System.Exception implements System.Runtime.Serialization.ISerializable [internal-ctor]  => generated
+
+class QuestPDF.Drawing.Exceptions.DocumentLayoutException : System.Exception implements System.Runtime.Serialization.ISerializable [internal-ctor]  => generated
+
+class QuestPDF.Drawing.Exceptions.InitializationException : System.Exception implements System.Runtime.Serialization.ISerializable [internal-ctor]  => generated
+
+static-class QuestPDF.Drawing.FontManager [doc]  => generated
+  static-method RegisterFont(stream: System.IO.Stream) -> System.Void [doc]  => unsupported: System.IO.Stream has no direction-neutral bridge mapping; byte[] and file-path overloads cover this scenario
+  static-method RegisterFontFromEmbeddedResource(pathName: System.String) -> System.Void [doc]  => generated
+  static-method RegisterFontType(fontName: System.String, stream: System.IO.Stream) -> System.Void [obsolete]  => unsupported: System.IO.Stream has no direction-neutral bridge mapping; byte[] and file-path overloads cover this scenario
+  static-method RegisterFontWithCustomName(fontName: System.String, stream: System.IO.Stream) -> System.Void [doc]  => unsupported: System.IO.Stream has no direction-neutral bridge mapping; byte[] and file-path overloads cover this scenario
+
+class QuestPDF.Elements.DynamicContext [doc]  => generated
+  property AvailableSize: QuestPDF.Infrastructure.Size { get; } [doc]  => generated
+  property PageNumber: System.Int32 { get; } [doc]  => generated
+  property TotalPages: System.Int32 { get; } [doc]  => generated
+  ctor ()  => generated
+  method CreateElement(content: System.Action<QuestPDF.Infrastructure.IContainer>) -> QuestPDF.Elements.IDynamicElement [doc]  => generated
+  method GetContentCapturedPositions(id: System.String) -> System.Collections.Generic.ICollection<QuestPDF.Infrastructure.PageElementLocation> [doc]  => unsupported: collection type System.Collections.Generic.ICollection<QuestPDF.Infrastructure.PageElementLocation> is only bridged in parameter position
+
+class QuestPDF.Elements.GenerateDynamicImageDelegatePayload  => generated
+  property AvailableSpace: QuestPDF.Infrastructure.Size { get; set; }  => generated
+  property Dpi: System.Int32 { get; set; }  => generated
+  property ImageSize: QuestPDF.Infrastructure.ImageSize { get; set; }  => generated
+  ctor ()  => generated
+
+delegate QuestPDF.Elements.GenerateDynamicImageDelegate implements System.ICloneable, System.Runtime.Serialization.ISerializable [doc]  => generated
+  invoke (payload: QuestPDF.Elements.GenerateDynamicImageDelegatePayload) -> System.Byte[]?
+  ctor (object: System.Object, method: System.IntPtr)
+
+interface QuestPDF.Elements.IDynamicElement implements QuestPDF.Infrastructure.IElement [doc]  => generated
+  property Size: QuestPDF.Infrastructure.Size { get; } [doc]  => generated
+
+class QuestPDF.Elements.ShowIfContext  => generated
+  property PageNumber: System.Int32 { get; }  => generated
+  property TotalPages: System.Int32? { get; } [doc]  => generated
+  ctor ()  => generated
+
+interface QuestPDF.Elements.Table.ITableCellContainer implements QuestPDF.Infrastructure.IContainer  => generated
+
+static-class QuestPDF.Fluent.AlignmentExtensions  => generated
+  extension AlignBottom(this element: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension AlignCenter(this element: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension AlignLeft(this element: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension AlignMiddle(this element: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension AlignRight(this element: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension AlignTop(this element: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+
+class QuestPDF.Fluent.ColumnDescriptor [internal-ctor]  => generated
+  method Item() -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  method Spacing(value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> System.Void [doc]  => generated
+
+static-class QuestPDF.Fluent.ColumnExtensions  => generated
+  extension Column(this element: QuestPDF.Infrastructure.IContainer, handler: System.Action<QuestPDF.Fluent.ColumnDescriptor>) -> System.Void [doc]  => generated
+  extension Stack(this element: QuestPDF.Infrastructure.IContainer, handler: System.Action<QuestPDF.Fluent.ColumnDescriptor>) -> System.Void [obsolete]  => generated
+
+static-class QuestPDF.Fluent.ComponentExtensions  => generated
+  extension Component<T : QuestPDF.Infrastructure.IComponent & new()>(this element: QuestPDF.Infrastructure.IContainer) -> System.Void [doc]  => unsupported: generic method without an API-bound type parameter cannot cross the bridge
+  extension Component<T : QuestPDF.Infrastructure.IComponent>(this element: QuestPDF.Infrastructure.IContainer, component: T) -> System.Void [doc]  => generated
+
+static-class QuestPDF.Fluent.ConstrainedExtensions  => generated
+  extension Height(this element: QuestPDF.Infrastructure.IContainer, value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension MaxHeight(this element: QuestPDF.Infrastructure.IContainer, value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension MaxWidth(this element: QuestPDF.Infrastructure.IContainer, value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension MinHeight(this element: QuestPDF.Infrastructure.IContainer, value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension MinWidth(this element: QuestPDF.Infrastructure.IContainer, value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension Width(this element: QuestPDF.Infrastructure.IContainer, value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+
+static-class QuestPDF.Fluent.ContentDirectionExtensions  => generated
+  extension ContentFromLeftToRight(this element: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension ContentFromRightToLeft(this element: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+
+static-class QuestPDF.Fluent.DebugExtensions  => generated
+  extension DebugArea(this parent: QuestPDF.Infrastructure.IContainer, text: System.String? = null, color: QuestPDF.Infrastructure.Color? = null) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension DebugPointer(this parent: QuestPDF.Infrastructure.IContainer, label: System.String) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+
+class QuestPDF.Fluent.DecorationDescriptor [internal-ctor]  => generated
+  method After() -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  method After(handler: System.Action<QuestPDF.Infrastructure.IContainer>) -> System.Void [doc]  => generated
+  method Before() -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  method Before(handler: System.Action<QuestPDF.Infrastructure.IContainer>) -> System.Void [doc]  => generated
+  method Content() -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  method Content(handler: System.Action<QuestPDF.Infrastructure.IContainer>) -> System.Void [doc]  => generated
+  method Footer() -> QuestPDF.Infrastructure.IContainer [obsolete]  => generated
+  method Footer(handler: System.Action<QuestPDF.Infrastructure.IContainer>) -> System.Void [obsolete]  => generated
+  method Header() -> QuestPDF.Infrastructure.IContainer [obsolete]  => generated
+  method Header(handler: System.Action<QuestPDF.Infrastructure.IContainer>) -> System.Void [obsolete]  => generated
+
+static-class QuestPDF.Fluent.DecorationExtensions  => generated
+  extension Decoration(this element: QuestPDF.Infrastructure.IContainer, handler: System.Action<QuestPDF.Fluent.DecorationDescriptor>) -> System.Void [doc]  => generated
+
+enum QuestPDF.Fluent.DocumentOperation.DocumentAttachmentRelationship implements System.IComparable, System.IConvertible, System.IFormattable, System.ISpanFormattable  => generated
+  value Data = 0 [doc]
+  value Source = 1 [doc]
+  value Alternative = 2 [doc]
+  value Supplement = 3 [doc]
+  value Unspecified = 4 [doc]
+
+class QuestPDF.Fluent.DocumentOperation.DocumentAttachment  => generated
+  property AttachmentName: System.String? { get; set; } [doc]  => generated
+  property CreationDate: System.DateTime? { get; set; } [doc]  => generated
+  property Description: System.String? { get; set; } [doc]  => generated
+  property FilePath: System.String { get; set; } [doc]  => generated
+  property Key: System.String? { get; set; } [doc]  => generated
+  property MimeType: System.String? { get; set; } [doc]  => generated
+  property ModificationDate: System.DateTime? { get; set; } [doc]  => generated
+  property Relationship: QuestPDF.Fluent.DocumentOperation.DocumentAttachmentRelationship? { get; set; } [doc]  => generated
+  property Replace: System.Boolean { get; set; } [doc]  => generated
+  ctor ()  => generated
+
+class QuestPDF.Fluent.DocumentOperation.Encryption128Bit : QuestPDF.Fluent.DocumentOperation.EncryptionBase  => generated
+  property AllowAnnotation: System.Boolean { get; set; } [doc]  => generated
+  property AllowAssembly: System.Boolean { get; set; } [doc]  => generated
+  property AllowContentExtraction: System.Boolean { get; set; } [doc]  => generated
+  property AllowFillingForms: System.Boolean { get; set; } [doc]  => generated
+  property AllowPrinting: System.Boolean { get; set; } [doc]  => generated
+  property EncryptMetadata: System.Boolean { get; set; } [doc]  => generated
+  ctor ()  => generated
+
+class QuestPDF.Fluent.DocumentOperation.Encryption256Bit : QuestPDF.Fluent.DocumentOperation.EncryptionBase  => generated
+  property AllowAnnotation: System.Boolean { get; set; } [doc]  => generated
+  property AllowAssembly: System.Boolean { get; set; } [doc]  => generated
+  property AllowContentExtraction: System.Boolean { get; set; } [doc]  => generated
+  property AllowFillingForms: System.Boolean { get; set; } [doc]  => generated
+  property AllowPrinting: System.Boolean { get; set; } [doc]  => generated
+  property EncryptMetadata: System.Boolean { get; set; } [doc]  => generated
+  ctor ()  => generated
+
+class QuestPDF.Fluent.DocumentOperation.Encryption40Bit : QuestPDF.Fluent.DocumentOperation.EncryptionBase  => generated
+  property AllowAnnotation: System.Boolean { get; set; } [doc]  => generated
+  property AllowContentExtraction: System.Boolean { get; set; } [doc]  => generated
+  property AllowModification: System.Boolean { get; set; } [doc]  => generated
+  property AllowPrinting: System.Boolean { get; set; } [doc]  => generated
+  ctor ()  => generated
+
+class QuestPDF.Fluent.DocumentOperation.EncryptionBase  => generated
+  property OwnerPassword: System.String { get; set; } [doc]  => generated
+  property UserPassword: System.String? { get; set; } [doc]  => generated
+  ctor ()  => generated
+
+class QuestPDF.Fluent.DocumentOperation.LayerConfiguration [doc]  => generated
+  property FilePath: System.String { get; set; } [doc]  => generated
+  property RepeatSourcePages: System.String? { get; set; } [doc]  => generated
+  property SourcePages: System.String? { get; set; } [doc]  => generated
+  property TargetPages: System.String? { get; set; } [doc]  => generated
+  ctor ()  => generated
+
+class QuestPDF.Fluent.DocumentOperation [internal-ctor] [doc]  => generated
+  method AddAttachment(attachment: QuestPDF.Fluent.DocumentOperation.DocumentAttachment) -> QuestPDF.Fluent.DocumentOperation [doc]  => generated
+  method Decrypt() -> QuestPDF.Fluent.DocumentOperation [doc]  => generated
+  method Encrypt(encryption: QuestPDF.Fluent.DocumentOperation.Encryption128Bit) -> QuestPDF.Fluent.DocumentOperation [doc]  => generated
+  method Encrypt(encryption: QuestPDF.Fluent.DocumentOperation.Encryption256Bit) -> QuestPDF.Fluent.DocumentOperation [doc]  => generated
+  method Encrypt(encryption: QuestPDF.Fluent.DocumentOperation.Encryption40Bit) -> QuestPDF.Fluent.DocumentOperation [doc]  => generated
+  method ExtendMetadata(metadata: System.String) -> QuestPDF.Fluent.DocumentOperation [doc]  => generated
+  method Linearize() -> QuestPDF.Fluent.DocumentOperation [doc]  => generated
+  static-method LoadFile(filePath: System.String, password: System.String? = null) -> QuestPDF.Fluent.DocumentOperation [doc]  => generated
+  method MergeFile(filePath: System.String, pageSelector: System.String? = null) -> QuestPDF.Fluent.DocumentOperation [doc]  => generated
+  method OverlayFile(configuration: QuestPDF.Fluent.DocumentOperation.LayerConfiguration) -> QuestPDF.Fluent.DocumentOperation [doc]  => generated
+  method RemoveRestrictions() -> QuestPDF.Fluent.DocumentOperation [doc]  => generated
+  method Save(filePath: System.String) -> System.Void [doc]  => generated
+  method TakePages(pageSelector: System.String) -> QuestPDF.Fluent.DocumentOperation [doc]  => generated
+  method UnderlayFile(configuration: QuestPDF.Fluent.DocumentOperation.LayerConfiguration) -> QuestPDF.Fluent.DocumentOperation [doc]  => generated
+
+class QuestPDF.Fluent.Document implements QuestPDF.Infrastructure.IDocument [internal-ctor]  => generated
+  method Compose(container: QuestPDF.Infrastructure.IDocumentContainer) -> System.Void [doc]  => generated
+  static-method Create(handler: System.Action<QuestPDF.Infrastructure.IDocumentContainer>) -> QuestPDF.Fluent.Document [doc]  => generated
+  method GetMetadata() -> QuestPDF.Infrastructure.DocumentMetadata [doc]  => generated
+  method GetSettings() -> QuestPDF.Infrastructure.DocumentSettings [doc]  => generated
+  static-method Merge(params documents: QuestPDF.Infrastructure.IDocument[]) -> QuestPDF.Infrastructure.MergedDocument [doc]  => generated
+  static-method Merge(documents: System.Collections.Generic.IEnumerable<QuestPDF.Infrastructure.IDocument>) -> QuestPDF.Infrastructure.MergedDocument [doc]  => generated
+  method WithMetadata(metadata: QuestPDF.Infrastructure.DocumentMetadata) -> QuestPDF.Fluent.Document [doc]  => generated
+  method WithSettings(settings: QuestPDF.Infrastructure.DocumentSettings) -> QuestPDF.Fluent.Document [doc]  => generated
+
+static-class QuestPDF.Fluent.DynamicComponentExtensions  => generated
+  extension Dynamic(this element: QuestPDF.Infrastructure.IContainer, dynamicElement: QuestPDF.Infrastructure.IDynamicComponent) -> System.Void [doc]  => generated
+  extension Dynamic<TState : struct & new()>(this element: QuestPDF.Infrastructure.IContainer, dynamicElement: QuestPDF.Infrastructure.IDynamicComponent<TState>) -> System.Void [doc]  => unsupported: generic method without an API-bound type parameter cannot cross the bridge
+  extension Element(this element: QuestPDF.Infrastructure.IContainer, child: QuestPDF.Elements.IDynamicElement) -> System.Void [doc]  => generated
+
+class QuestPDF.Fluent.DynamicImageDescriptor [internal-ctor]  => generated
+  method UseOriginalImage(value: System.Boolean = true) -> QuestPDF.Fluent.DynamicImageDescriptor [doc]  => generated
+  method WithCompressionQuality(quality: QuestPDF.Infrastructure.ImageCompressionQuality) -> QuestPDF.Fluent.DynamicImageDescriptor [doc]  => generated
+  method WithRasterDpi(dpi: System.Int32) -> QuestPDF.Fluent.DynamicImageDescriptor [doc]  => generated
+
+delegate QuestPDF.Fluent.ElementExtensions.DrawOnCanvas implements System.ICloneable, System.Runtime.Serialization.ISerializable [obsolete]  => generated
+  invoke (canvas: System.Object, availableSpace: QuestPDF.Infrastructure.Size) -> System.Void
+  ctor (object: System.Object, method: System.IntPtr)
+
+static-class QuestPDF.Fluent.ElementExtensions [doc]  => generated
+  extension AspectRatio(this element: QuestPDF.Infrastructure.IContainer, ratio: System.Single, option: QuestPDF.Infrastructure.AspectRatioOption = FitWidth) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension Canvas(this element: QuestPDF.Infrastructure.IContainer, handler: QuestPDF.Fluent.ElementExtensions.DrawOnCanvas) -> System.Void [obsolete]  => unsupported: no bridge marshal for System.Object
+  extension CaptureContentPosition(this element: QuestPDF.Infrastructure.IContainer, id: System.String) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension Container(this element: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension DefaultTextStyle(this element: QuestPDF.Infrastructure.IContainer, textStyle: QuestPDF.Infrastructure.TextStyle) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension DefaultTextStyle(this element: QuestPDF.Infrastructure.IContainer, handler: System.Func<QuestPDF.Infrastructure.TextStyle, QuestPDF.Infrastructure.TextStyle>) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension Element(this parent: QuestPDF.Infrastructure.IContainer, child: QuestPDF.Infrastructure.IContainer) -> System.Void  => generated
+  extension Element(this parent: QuestPDF.Infrastructure.IContainer, handler: System.Action<QuestPDF.Infrastructure.IContainer>, handlerName: System.String = null [caller-info], parentName: System.String = "" [caller-info], sourceFilePath: System.String = "" [caller-info], sourceLineNumber: System.Int32 = 0 [caller-info]) -> System.Void [doc]  => generated
+  extension Element(this parent: QuestPDF.Infrastructure.IContainer, handler: System.Func<QuestPDF.Infrastructure.IContainer, QuestPDF.Infrastructure.IContainer>, handlerName: System.String = null [caller-info], parentName: System.String = "" [caller-info], sourceFilePath: System.String = "" [caller-info], sourceLineNumber: System.Int32 = 0 [caller-info]) -> QuestPDF.Infrastructure.IContainer [doc]  => generated, unsupported: JVM signature clash with the overload kept as 'element' (erasure: element(Function1)); Kotlin forbids both
+  extension EnsureSpace(this element: QuestPDF.Infrastructure.IContainer, minHeight: System.Single = 150) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension ExternalLink(this element: QuestPDF.Infrastructure.IContainer, url: System.String) -> QuestPDF.Infrastructure.IContainer [obsolete]  => generated
+  extension Hyperlink(this element: QuestPDF.Infrastructure.IContainer, url: System.String) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension InternalLink(this element: QuestPDF.Infrastructure.IContainer, locationName: System.String) -> QuestPDF.Infrastructure.IContainer [obsolete]  => generated
+  extension Lazy(this element: QuestPDF.Infrastructure.IContainer, contentBuilder: System.Action<QuestPDF.Infrastructure.IContainer>) -> System.Void [doc]  => generated
+  extension LazyWithCache(this element: QuestPDF.Infrastructure.IContainer, contentBuilder: System.Action<QuestPDF.Infrastructure.IContainer>) -> System.Void [doc]  => generated
+  extension Location(this element: QuestPDF.Infrastructure.IContainer, locationName: System.String) -> QuestPDF.Infrastructure.IContainer [obsolete]  => generated
+  extension PageBreak(this element: QuestPDF.Infrastructure.IContainer) -> System.Void [doc]  => generated
+  extension Placeholder(this element: QuestPDF.Infrastructure.IContainer, text: System.String? = null) -> System.Void [doc]  => generated
+  extension PreventPageBreak(this element: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension Repeat(this element: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension ScaleToFit(this element: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension Section(this element: QuestPDF.Infrastructure.IContainer, sectionName: System.String) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension SectionLink(this element: QuestPDF.Infrastructure.IContainer, sectionName: System.String) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension ShowEntire(this element: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension ShowIf(this element: QuestPDF.Infrastructure.IContainer, condition: System.Boolean) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension ShowIf(this element: QuestPDF.Infrastructure.IContainer, predicate: System.Predicate<QuestPDF.Elements.ShowIfContext>) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension ShowOnce(this element: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension SkipOnce(this element: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension StopPaging(this element: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension Unconstrained(this element: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension ZIndex(this element: QuestPDF.Infrastructure.IContainer, indexValue: System.Int32) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+
+static-class QuestPDF.Fluent.ExtendExtensions  => generated
+  extension Extend(this element: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension ExtendHorizontal(this element: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension ExtendVertical(this element: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+
+delegate QuestPDF.Fluent.GenerateDynamicSvgDelegate implements System.ICloneable, System.Runtime.Serialization.ISerializable [doc]  => generated
+  invoke (size: QuestPDF.Infrastructure.Size) -> System.String?
+  ctor (object: System.Object, method: System.IntPtr)
+
+delegate QuestPDF.Fluent.GenerateExtensions.GenerateDocumentImagePath implements System.ICloneable, System.Runtime.Serialization.ISerializable [doc]  => generated
+  invoke (imageIndex: System.Int32) -> System.String
+  ctor (object: System.Object, method: System.IntPtr)
+
+static-class QuestPDF.Fluent.GenerateExtensions  => generated
+  extension GenerateImages(this document: QuestPDF.Infrastructure.IDocument, imagePathSource: QuestPDF.Fluent.GenerateExtensions.GenerateDocumentImagePath, settings: QuestPDF.Infrastructure.ImageGenerationSettings? = null) -> System.Void [doc]  => generated
+  extension GenerateImages(this document: QuestPDF.Infrastructure.IDocument, settings: QuestPDF.Infrastructure.ImageGenerationSettings? = null) -> System.Collections.Generic.IEnumerable<System.Byte[]> [doc]  => unsupported: collection type System.Collections.Generic.IEnumerable<System.Byte[]> is only bridged in parameter position
+  extension GeneratePdf(this document: QuestPDF.Infrastructure.IDocument) -> System.Byte[] [doc]  => generated
+  extension GeneratePdf(this document: QuestPDF.Infrastructure.IDocument, stream: System.IO.Stream) -> System.Void [doc]  => unsupported: System.IO.Stream has no direction-neutral bridge mapping; byte[] and file-path overloads cover this scenario
+  extension GeneratePdf(this document: QuestPDF.Infrastructure.IDocument, filePath: System.String) -> System.Void [doc]  => generated
+  extension GeneratePdfAndShow(this document: QuestPDF.Infrastructure.IDocument) -> System.Void [doc]  => generated
+  extension GenerateSvg(this document: QuestPDF.Infrastructure.IDocument) -> System.Collections.Generic.ICollection<System.String> [doc]  => unsupported: collection type System.Collections.Generic.ICollection<System.String> is only bridged in parameter position
+  extension GenerateXps(this document: QuestPDF.Infrastructure.IDocument) -> System.Byte[] [doc]  => generated
+  extension GenerateXps(this document: QuestPDF.Infrastructure.IDocument, stream: System.IO.Stream) -> System.Void [doc]  => unsupported: System.IO.Stream has no direction-neutral bridge mapping; byte[] and file-path overloads cover this scenario
+  extension GenerateXps(this document: QuestPDF.Infrastructure.IDocument, filePath: System.String) -> System.Void [doc]  => generated
+  extension GenerateXpsAndShow(this document: QuestPDF.Infrastructure.IDocument) -> System.Void [doc]  => generated
+
+class QuestPDF.Fluent.GridDescriptor [internal-ctor]  => generated
+  method AlignCenter() -> System.Void  => generated
+  method AlignLeft() -> System.Void  => generated
+  method AlignRight() -> System.Void  => generated
+  method Alignment(alignment: QuestPDF.Infrastructure.HorizontalAlignment) -> System.Void  => generated
+  method Columns(value: System.Int32 = 12) -> System.Void  => generated
+  method HorizontalSpacing(value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> System.Void  => generated
+  method Item(columns: System.Int32 = 1) -> QuestPDF.Infrastructure.IContainer  => generated
+  method Spacing(value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> System.Void  => generated
+  method VerticalSpacing(value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> System.Void  => generated
+
+static-class QuestPDF.Fluent.GridExtensions  => generated
+  extension Grid(this element: QuestPDF.Infrastructure.IContainer, handler: System.Action<QuestPDF.Fluent.GridDescriptor>) -> System.Void [obsolete]  => generated
+
+class QuestPDF.Fluent.ImageDescriptor [internal-ctor]  => generated
+  method FitArea() -> QuestPDF.Fluent.ImageDescriptor [doc]  => generated
+  method FitHeight() -> QuestPDF.Fluent.ImageDescriptor [doc]  => generated
+  method FitUnproportionally() -> QuestPDF.Fluent.ImageDescriptor [doc]  => generated
+  method FitWidth() -> QuestPDF.Fluent.ImageDescriptor [doc]  => generated
+  method UseOriginalImage(value: System.Boolean = true) -> QuestPDF.Fluent.ImageDescriptor [doc]  => generated
+  method WithCompressionQuality(quality: QuestPDF.Infrastructure.ImageCompressionQuality) -> QuestPDF.Fluent.ImageDescriptor [doc]  => generated
+  method WithRasterDpi(dpi: System.Int32) -> QuestPDF.Fluent.ImageDescriptor [doc]  => generated
+
+static-class QuestPDF.Fluent.ImageExtensions  => generated
+  extension Image(this element: QuestPDF.Infrastructure.IContainer, dynamicImageSource: QuestPDF.Elements.GenerateDynamicImageDelegate) -> QuestPDF.Fluent.DynamicImageDescriptor [doc]  => generated
+  extension Image(this parent: QuestPDF.Infrastructure.IContainer, image: QuestPDF.Infrastructure.Image) -> QuestPDF.Fluent.ImageDescriptor [doc]  => generated
+  extension Image(this parent: QuestPDF.Infrastructure.IContainer, imageData: System.Byte[]) -> QuestPDF.Fluent.ImageDescriptor [doc]  => generated
+  extension Image(this parent: QuestPDF.Infrastructure.IContainer, imageData: System.Byte[], scaling: QuestPDF.Infrastructure.ImageScaling) -> System.Void [obsolete]  => generated
+  extension Image(this element: QuestPDF.Infrastructure.IContainer, dynamicImageSource: System.Func<QuestPDF.Infrastructure.ImageSize, System.Byte[]>) -> QuestPDF.Fluent.DynamicImageDescriptor [doc]  => generated, unsupported: JVM signature clash with the overload kept as 'image' (erasure: image(Function1)); Kotlin forbids both
+  extension Image(this element: QuestPDF.Infrastructure.IContainer, imageSource: System.Func<QuestPDF.Infrastructure.Size, System.Byte[]>) -> System.Void [obsolete]  => generated, unsupported: JVM signature clash with the overload kept as 'image' (erasure: image(Function1)); Kotlin forbids both
+  extension Image(this parent: QuestPDF.Infrastructure.IContainer, fileStream: System.IO.Stream) -> QuestPDF.Fluent.ImageDescriptor [doc]  => unsupported: System.IO.Stream has no direction-neutral bridge mapping; byte[] and file-path overloads cover this scenario
+  extension Image(this parent: QuestPDF.Infrastructure.IContainer, fileStream: System.IO.Stream, scaling: QuestPDF.Infrastructure.ImageScaling) -> System.Void [obsolete]  => unsupported: System.IO.Stream has no direction-neutral bridge mapping; byte[] and file-path overloads cover this scenario
+  extension Image(this parent: QuestPDF.Infrastructure.IContainer, filePath: System.String) -> QuestPDF.Fluent.ImageDescriptor [doc]  => generated
+  extension Image(this parent: QuestPDF.Infrastructure.IContainer, filePath: System.String, scaling: QuestPDF.Infrastructure.ImageScaling) -> System.Void [obsolete]  => generated
+
+class QuestPDF.Fluent.InlinedDescriptor [internal-ctor]  => generated
+  method AlignCenter() -> System.Void [doc]  => generated
+  method AlignJustify() -> System.Void [doc]  => generated
+  method AlignLeft() -> System.Void [doc]  => generated
+  method AlignRight() -> System.Void [doc]  => generated
+  method AlignSpaceAround() -> System.Void [doc]  => generated
+  method BaselineBottom() -> System.Void [doc]  => generated
+  method BaselineMiddle() -> System.Void [doc]  => generated
+  method BaselineTop() -> System.Void [doc]  => generated
+  method HorizontalSpacing(value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> System.Void [doc]  => generated
+  method Item() -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  method Spacing(value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> System.Void [doc]  => generated
+  method VerticalSpacing(value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> System.Void [doc]  => generated
+
+static-class QuestPDF.Fluent.InlinedExtensions  => generated
+  extension Inlined(this element: QuestPDF.Infrastructure.IContainer, handler: System.Action<QuestPDF.Fluent.InlinedDescriptor>) -> System.Void [doc]  => generated
+
+static-class QuestPDF.Fluent.LayerExtensions  => generated
+  extension Layers(this element: QuestPDF.Infrastructure.IContainer, handler: System.Action<QuestPDF.Fluent.LayersDescriptor>) -> System.Void [doc]  => generated
+
+class QuestPDF.Fluent.LayersDescriptor [internal-ctor]  => generated
+  method Layer() -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  method PrimaryLayer() -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+
+class QuestPDF.Fluent.LineDescriptor [internal-ctor]  => generated
+  method LineColor(color: QuestPDF.Infrastructure.Color) -> QuestPDF.Fluent.LineDescriptor [doc]  => generated
+  method LineDashPattern(dashPattern: System.Single[], unit: QuestPDF.Infrastructure.Unit = Point) -> QuestPDF.Fluent.LineDescriptor [doc]  => generated
+  method LineGradient(colors: QuestPDF.Infrastructure.Color[]) -> QuestPDF.Fluent.LineDescriptor [doc]  => generated
+
+static-class QuestPDF.Fluent.LineExtensions  => generated
+  extension LineHorizontal(this element: QuestPDF.Infrastructure.IContainer, thickness: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> QuestPDF.Fluent.LineDescriptor [doc]  => generated
+  extension LineVertical(this element: QuestPDF.Infrastructure.IContainer, thickness: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> QuestPDF.Fluent.LineDescriptor [doc]  => generated
+
+class QuestPDF.Fluent.MultiColumnDescriptor [internal-ctor]  => generated
+  method BalanceHeight(enable: System.Boolean = true) -> System.Void [doc]  => generated
+  method Columns(value: System.Int32 = 2) -> System.Void [doc]  => generated
+  method Content() -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  method Spacer() -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  method Spacing(value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> System.Void [doc]  => generated
+
+static-class QuestPDF.Fluent.MultiColumnExtensions  => generated
+  extension MultiColumn(this element: QuestPDF.Infrastructure.IContainer, handler: System.Action<QuestPDF.Fluent.MultiColumnDescriptor>) -> System.Void [doc]  => generated
+
+static-class QuestPDF.Fluent.OffsetExtensions  => generated
+  extension OffsetX(this element: QuestPDF.Infrastructure.IContainer, value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension OffsetY(this element: QuestPDF.Infrastructure.IContainer, value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+
+static-class QuestPDF.Fluent.PaddingExtensions  => generated
+  extension Padding(this element: QuestPDF.Infrastructure.IContainer, value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension PaddingBottom(this element: QuestPDF.Infrastructure.IContainer, value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension PaddingHorizontal(this element: QuestPDF.Infrastructure.IContainer, value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension PaddingLeft(this element: QuestPDF.Infrastructure.IContainer, value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension PaddingRight(this element: QuestPDF.Infrastructure.IContainer, value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension PaddingTop(this element: QuestPDF.Infrastructure.IContainer, value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension PaddingVertical(this element: QuestPDF.Infrastructure.IContainer, value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+
+class QuestPDF.Fluent.PageDescriptor [internal-ctor]  => generated
+  method Background() -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  method Background(color: QuestPDF.Infrastructure.Color) -> System.Void [obsolete]  => generated
+  method Content() -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  method ContentFromLeftToRight() -> System.Void [doc]  => generated
+  method ContentFromRightToLeft() -> System.Void [doc]  => generated
+  method ContinuousSize(width: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> System.Void [doc]  => generated
+  method DefaultTextStyle(textStyle: QuestPDF.Infrastructure.TextStyle) -> System.Void [doc]  => generated
+  method DefaultTextStyle(handler: System.Func<QuestPDF.Infrastructure.TextStyle, QuestPDF.Infrastructure.TextStyle>) -> System.Void [doc]  => generated
+  method Footer() -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  method Foreground() -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  method Header() -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  method Margin(value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> System.Void [doc]  => generated
+  method MarginBottom(value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> System.Void [doc]  => generated
+  method MarginHorizontal(value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> System.Void [doc]  => generated
+  method MarginLeft(value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> System.Void [doc]  => generated
+  method MarginRight(value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> System.Void [doc]  => generated
+  method MarginTop(value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> System.Void [doc]  => generated
+  method MarginVertical(value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> System.Void [doc]  => generated
+  method MaxSize(pageSize: QuestPDF.Helpers.PageSize) -> System.Void [doc]  => generated
+  method MinSize(pageSize: QuestPDF.Helpers.PageSize) -> System.Void [doc]  => generated
+  method PageColor(color: QuestPDF.Infrastructure.Color) -> System.Void [doc]  => generated
+  method Size(pageSize: QuestPDF.Helpers.PageSize) -> System.Void [doc]  => generated
+  method Size(width: System.Single, height: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> System.Void [doc]  => generated
+
+static-class QuestPDF.Fluent.PageExtensions  => generated
+  extension Page(this document: QuestPDF.Infrastructure.IDocumentContainer, handler: System.Action<QuestPDF.Fluent.PageDescriptor>) -> QuestPDF.Infrastructure.IDocumentContainer [doc]  => generated
+
+delegate QuestPDF.Fluent.PageNumberFormatter implements System.ICloneable, System.Runtime.Serialization.ISerializable [doc]  => generated
+  invoke (pageNumber: System.Int32?) -> System.String
+  ctor (object: System.Object, method: System.IntPtr)
+
+static-class QuestPDF.Fluent.RotateExtensions  => generated
+  extension Rotate(this element: QuestPDF.Infrastructure.IContainer, angle: System.Single) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension RotateLeft(this element: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension RotateRight(this element: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+
+class QuestPDF.Fluent.RowDescriptor [internal-ctor]  => generated
+  method AutoItem() -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  method ConstantColumn(size: System.Single) -> QuestPDF.Infrastructure.IContainer [obsolete]  => generated
+  method ConstantItem(size: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  method RelativeColumn(size: System.Single = 1) -> QuestPDF.Infrastructure.IContainer [obsolete]  => generated
+  method RelativeItem(size: System.Single = 1) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  method Spacing(spacing: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> System.Void [doc]  => generated
+
+static-class QuestPDF.Fluent.RowExtensions  => generated
+  extension Row(this element: QuestPDF.Infrastructure.IContainer, handler: System.Action<QuestPDF.Fluent.RowDescriptor>) -> System.Void [doc]  => generated
+
+static-class QuestPDF.Fluent.ScaleExtensions  => generated
+  extension FlipHorizontal(this element: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension FlipOver(this element: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension FlipVertical(this element: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension Scale(this element: QuestPDF.Infrastructure.IContainer, factor: System.Single) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension ScaleHorizontal(this element: QuestPDF.Infrastructure.IContainer, factor: System.Single) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension ScaleVertical(this element: QuestPDF.Infrastructure.IContainer, factor: System.Single) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+
+static-class QuestPDF.Fluent.SemanticExtensions  => generated
+  extension SemanticArticle(this container: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension SemanticBlockQuotation(this container: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension SemanticCaption(this container: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension SemanticCode(this container: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension SemanticDivision(this container: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension SemanticFigure(this container: QuestPDF.Infrastructure.IContainer, alternativeText: System.String) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension SemanticFormula(this container: QuestPDF.Infrastructure.IContainer, alternativeText: System.String) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension SemanticHeader1(this container: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension SemanticHeader2(this container: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension SemanticHeader3(this container: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension SemanticHeader4(this container: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension SemanticHeader5(this container: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension SemanticHeader6(this container: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension SemanticIgnore(this container: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension SemanticImage(this container: QuestPDF.Infrastructure.IContainer, alternativeText: System.String) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension SemanticIndex(this container: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension SemanticLanguage(this container: QuestPDF.Infrastructure.IContainer, language: System.String) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension SemanticLink(this container: QuestPDF.Infrastructure.IContainer, alternativeText: System.String) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension SemanticList(this container: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension SemanticListItem(this container: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension SemanticListItemBody(this container: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension SemanticListLabel(this container: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension SemanticParagraph(this container: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension SemanticQuote(this container: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension SemanticSection(this container: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension SemanticSpan(this container: QuestPDF.Infrastructure.IContainer, alternativeText: System.String? = null) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension SemanticTable(this container: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension SemanticTableOfContents(this container: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension SemanticTableOfContentsItem(this container: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+
+static-class QuestPDF.Fluent.ShrinkExtensions  => generated
+  extension Box(this element: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [obsolete]  => generated
+  extension MinimalBox(this element: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [obsolete]  => generated
+  extension Shrink(this element: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension ShrinkHorizontal(this element: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension ShrinkVertical(this element: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+
+static-class QuestPDF.Fluent.StyledBoxExtensions  => generated
+  extension Background(this element: QuestPDF.Infrastructure.IContainer, color: QuestPDF.Infrastructure.Color) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension BackgroundLinearGradient(this element: QuestPDF.Infrastructure.IContainer, angle: System.Single, colors: QuestPDF.Infrastructure.Color[]) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension Border(this element: QuestPDF.Infrastructure.IContainer, all: System.Single, color: QuestPDF.Infrastructure.Color) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension Border(this element: QuestPDF.Infrastructure.IContainer, value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension BorderAlignmentInside(this element: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension BorderAlignmentMiddle(this element: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension BorderAlignmentOutside(this element: QuestPDF.Infrastructure.IContainer) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension BorderBottom(this element: QuestPDF.Infrastructure.IContainer, value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension BorderColor(this element: QuestPDF.Infrastructure.IContainer, color: QuestPDF.Infrastructure.Color) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension BorderHorizontal(this element: QuestPDF.Infrastructure.IContainer, value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension BorderLeft(this element: QuestPDF.Infrastructure.IContainer, value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension BorderLinearGradient(this element: QuestPDF.Infrastructure.IContainer, angle: System.Single, colors: QuestPDF.Infrastructure.Color[]) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension BorderRight(this element: QuestPDF.Infrastructure.IContainer, value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension BorderTop(this element: QuestPDF.Infrastructure.IContainer, value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension BorderVertical(this element: QuestPDF.Infrastructure.IContainer, value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension CornerRadius(this element: QuestPDF.Infrastructure.IContainer, value: System.Single = 0, unit: QuestPDF.Infrastructure.Unit = Point) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension CornerRadiusBottomLeft(this element: QuestPDF.Infrastructure.IContainer, value: System.Single = 0, unit: QuestPDF.Infrastructure.Unit = Point) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension CornerRadiusBottomRight(this element: QuestPDF.Infrastructure.IContainer, value: System.Single = 0, unit: QuestPDF.Infrastructure.Unit = Point) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension CornerRadiusTopLeft(this element: QuestPDF.Infrastructure.IContainer, value: System.Single = 0, unit: QuestPDF.Infrastructure.Unit = Point) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension CornerRadiusTopRight(this element: QuestPDF.Infrastructure.IContainer, value: System.Single = 0, unit: QuestPDF.Infrastructure.Unit = Point) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  extension Shadow(this element: QuestPDF.Infrastructure.IContainer, style: QuestPDF.Infrastructure.BoxShadowStyle) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+
+static-class QuestPDF.Fluent.SvgExtensions  => generated
+  extension Svg(this element: QuestPDF.Infrastructure.IContainer, dynamicSvgSource: QuestPDF.Fluent.GenerateDynamicSvgDelegate) -> System.Void [doc]  => generated
+  extension Svg(this parent: QuestPDF.Infrastructure.IContainer, image: QuestPDF.Infrastructure.SvgImage) -> QuestPDF.Fluent.SvgImageDescriptor [doc]  => generated
+  extension Svg(this container: QuestPDF.Infrastructure.IContainer, svg: System.String) -> QuestPDF.Fluent.SvgImageDescriptor [doc]  => generated
+
+class QuestPDF.Fluent.SvgImageDescriptor [internal-ctor]  => generated
+  method FitArea() -> QuestPDF.Fluent.SvgImageDescriptor [doc]  => generated
+  method FitHeight() -> QuestPDF.Fluent.SvgImageDescriptor [doc]  => generated
+  method FitWidth() -> QuestPDF.Fluent.SvgImageDescriptor [doc]  => generated
+
+class QuestPDF.Fluent.TableCellDescriptor [internal-ctor]  => generated
+  method Cell() -> QuestPDF.Elements.Table.ITableCellContainer [doc]  => generated
+
+static-class QuestPDF.Fluent.TableCellExtensions  => generated
+  extension AsSemanticHorizontalHeader(this tableCellContainer: QuestPDF.Elements.Table.ITableCellContainer) -> QuestPDF.Elements.Table.ITableCellContainer [doc]  => generated
+  extension Column(this tableCellContainer: QuestPDF.Elements.Table.ITableCellContainer, value: System.UInt32) -> QuestPDF.Elements.Table.ITableCellContainer [doc]  => generated
+  extension ColumnSpan(this tableCellContainer: QuestPDF.Elements.Table.ITableCellContainer, value: System.UInt32) -> QuestPDF.Elements.Table.ITableCellContainer [doc]  => generated
+  extension Row(this tableCellContainer: QuestPDF.Elements.Table.ITableCellContainer, value: System.UInt32) -> QuestPDF.Elements.Table.ITableCellContainer [doc]  => generated
+  extension RowSpan(this tableCellContainer: QuestPDF.Elements.Table.ITableCellContainer, value: System.UInt32) -> QuestPDF.Elements.Table.ITableCellContainer [doc]  => generated
+
+class QuestPDF.Fluent.TableColumnsDefinitionDescriptor [internal-ctor]  => generated
+  method ConstantColumn(width: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> System.Void [doc]  => generated
+  method RelativeColumn(width: System.Single = 1) -> System.Void [doc]  => generated
+
+class QuestPDF.Fluent.TableDescriptor [internal-ctor]  => generated
+  method Cell() -> QuestPDF.Elements.Table.ITableCellContainer [doc]  => generated
+  method ColumnsDefinition(handler: System.Action<QuestPDF.Fluent.TableColumnsDefinitionDescriptor>) -> System.Void [doc]  => generated
+  method ExtendLastCellsToTableBottom() -> System.Void [doc]  => generated
+  method Footer(handler: System.Action<QuestPDF.Fluent.TableCellDescriptor>) -> System.Void [doc]  => generated
+  method Header(handler: System.Action<QuestPDF.Fluent.TableCellDescriptor>) -> System.Void [doc]  => generated
+
+static-class QuestPDF.Fluent.TableExtensions  => generated
+  extension Table(this element: QuestPDF.Infrastructure.IContainer, handler: System.Action<QuestPDF.Fluent.TableDescriptor>) -> System.Void [doc]  => generated
+
+class QuestPDF.Fluent.TextBlockDescriptor : QuestPDF.Fluent.TextSpanDescriptor [internal-ctor]  => generated
+  method AlignCenter() -> QuestPDF.Fluent.TextBlockDescriptor [doc]  => generated
+  method AlignEnd() -> QuestPDF.Fluent.TextBlockDescriptor [doc]  => generated
+  method AlignLeft() -> QuestPDF.Fluent.TextBlockDescriptor [doc]  => generated
+  method AlignRight() -> QuestPDF.Fluent.TextBlockDescriptor [doc]  => generated
+  method AlignStart() -> QuestPDF.Fluent.TextBlockDescriptor [doc]  => generated
+  method ClampLines(maxLines: System.Int32, ellipsis: System.String = "…") -> QuestPDF.Fluent.TextBlockDescriptor [doc]  => generated
+  method Justify() -> QuestPDF.Fluent.TextBlockDescriptor [doc]  => generated
+  method ParagraphFirstLineIndentation(value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> QuestPDF.Fluent.TextBlockDescriptor [doc]  => generated
+  method ParagraphSpacing(value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> QuestPDF.Fluent.TextBlockDescriptor [doc]  => generated
+
+class QuestPDF.Fluent.TextDescriptor [internal-ctor]  => generated
+  method AlignCenter() -> System.Void [doc]  => generated
+  method AlignEnd() -> System.Void [doc]  => generated
+  method AlignLeft() -> System.Void [doc]  => generated
+  method AlignRight() -> System.Void [doc]  => generated
+  method AlignStart() -> System.Void [doc]  => generated
+  method BeginPageNumberOfSection(sectionName: System.String) -> QuestPDF.Fluent.TextPageNumberDescriptor [doc]  => generated
+  method ClampLines(maxLines: System.Int32, ellipsis: System.String = "…") -> System.Void [doc]  => generated
+  method CurrentPageNumber() -> QuestPDF.Fluent.TextPageNumberDescriptor [doc]  => generated
+  method DefaultTextStyle(style: QuestPDF.Infrastructure.TextStyle) -> System.Void [doc]  => generated
+  method DefaultTextStyle(style: System.Func<QuestPDF.Infrastructure.TextStyle, QuestPDF.Infrastructure.TextStyle>) -> System.Void [doc]  => generated
+  method Element(alignment: QuestPDF.Infrastructure.TextInjectedElementAlignment = AboveBaseline) -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+  method Element(handler: System.Action<QuestPDF.Infrastructure.IContainer>, alignment: QuestPDF.Infrastructure.TextInjectedElementAlignment = AboveBaseline) -> System.Void [doc]  => generated
+  method EmptyLine() -> QuestPDF.Fluent.TextSpanDescriptor [doc]  => generated
+  method EndPageNumberOfSection(sectionName: System.String) -> QuestPDF.Fluent.TextPageNumberDescriptor [doc]  => generated
+  method ExternalLocation(text: System.String?, url: System.String, style: QuestPDF.Infrastructure.TextStyle? = null) -> System.Void [obsolete]  => generated
+  method Hyperlink(text: System.String?, url: System.String) -> QuestPDF.Fluent.TextSpanDescriptor [doc]  => generated
+  method InternalLocation(text: System.String?, locationName: System.String, style: QuestPDF.Infrastructure.TextStyle? = null) -> System.Void [obsolete]  => generated
+  method Justify() -> System.Void [doc]  => generated
+  method Line(text: System.String?) -> QuestPDF.Fluent.TextSpanDescriptor [doc]  => generated
+  method PageNumberOfLocation(sectionName: System.String, style: QuestPDF.Infrastructure.TextStyle? = null) -> System.Void [obsolete]  => generated
+  method PageNumberWithinSection(sectionName: System.String) -> QuestPDF.Fluent.TextPageNumberDescriptor [doc]  => generated
+  method ParagraphFirstLineIndentation(value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> System.Void [doc]  => generated
+  method ParagraphSpacing(value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> System.Void [doc]  => generated
+  method SectionLink(text: System.String?, sectionName: System.String) -> QuestPDF.Fluent.TextSpanDescriptor [doc]  => generated
+  method Span(text: System.String?) -> QuestPDF.Fluent.TextSpanDescriptor [doc]  => generated
+  method Span(text: System.String?, style: QuestPDF.Infrastructure.TextStyle) -> System.Void [obsolete]  => generated
+  method TotalPages() -> QuestPDF.Fluent.TextPageNumberDescriptor [doc]  => generated
+  method TotalPagesWithinSection(sectionName: System.String) -> QuestPDF.Fluent.TextPageNumberDescriptor [doc]  => generated
+
+static-class QuestPDF.Fluent.TextExtensions  => generated
+  extension Text(this element: QuestPDF.Infrastructure.IContainer, content: System.Action<QuestPDF.Fluent.TextDescriptor>) -> System.Void [doc]  => generated
+  extension Text(this element: QuestPDF.Infrastructure.IContainer, text: System.Object?) -> QuestPDF.Fluent.TextSpanDescriptor [obsolete]  => unsupported: no bridge marshal for System.Object?
+  extension Text(this element: QuestPDF.Infrastructure.IContainer, text: System.Object?, style: QuestPDF.Infrastructure.TextStyle) -> System.Void [obsolete]  => unsupported: no bridge marshal for System.Object?
+  extension Text(this container: QuestPDF.Infrastructure.IContainer, text: System.String?) -> QuestPDF.Fluent.TextBlockDescriptor [doc]  => generated
+
+class QuestPDF.Fluent.TextPageNumberDescriptor : QuestPDF.Fluent.TextSpanDescriptor [internal-ctor]  => generated
+  method Format(formatter: QuestPDF.Fluent.PageNumberFormatter) -> QuestPDF.Fluent.TextPageNumberDescriptor [doc]  => generated
+
+static-class QuestPDF.Fluent.TextSpanDescriptorExtensions  => generated
+  extension BackgroundColor<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T, color: QuestPDF.Infrastructure.Color) -> T [doc]  => generated
+  extension Black<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T) -> T [doc]  => generated
+  extension Bold<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T) -> T [doc]  => generated
+  extension DecorationColor<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T, color: QuestPDF.Infrastructure.Color) -> T [doc]  => generated
+  extension DecorationDashed<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T) -> T [doc]  => generated
+  extension DecorationDotted<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T) -> T [doc]  => generated
+  extension DecorationDouble<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T) -> T [doc]  => generated
+  extension DecorationSolid<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T) -> T [doc]  => generated
+  extension DecorationThickness<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T, factor: System.Single) -> T [doc]  => generated
+  extension DecorationWavy<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T) -> T [doc]  => generated
+  extension DirectionAuto<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T) -> T [doc]  => generated
+  extension DirectionFromLeftToRight<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T) -> T [doc]  => generated
+  extension DirectionFromRightToLeft<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T) -> T [doc]  => generated
+  extension DisableFontFeature<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T, featureName: System.String) -> T [doc]  => generated
+  extension EnableFontFeature<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T, featureName: System.String) -> T [doc]  => generated
+  extension ExtraBlack<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T) -> T [doc]  => generated
+  extension ExtraBold<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T) -> T [doc]  => generated
+  extension ExtraLight<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T) -> T [doc]  => generated
+  extension Fallback<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T, value: QuestPDF.Infrastructure.TextStyle? = null) -> T [obsolete]  => generated
+  extension Fallback<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T, handler: System.Func<QuestPDF.Infrastructure.TextStyle, QuestPDF.Infrastructure.TextStyle>) -> T [obsolete]  => generated
+  extension FontColor<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T, color: QuestPDF.Infrastructure.Color) -> T [doc]  => generated
+  extension FontFamily<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T, params values: System.String[]) -> T [doc]  => generated
+  extension FontSize<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T, value: System.Single) -> T [doc]  => generated
+  extension Italic<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T, value: System.Boolean = true) -> T [doc]  => generated
+  extension LetterSpacing<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T, factor: System.Single = 0) -> T [doc]  => generated
+  extension Light<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T) -> T [doc]  => generated
+  extension LineHeight<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T, factor: System.Single?) -> T [doc]  => generated
+  extension Medium<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T) -> T [doc]  => generated
+  extension NormalPosition<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T) -> T [doc]  => generated
+  extension NormalWeight<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T) -> T [doc]  => generated
+  extension Overline<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T, value: System.Boolean = true) -> T [doc]  => generated
+  extension SemiBold<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T) -> T [doc]  => generated
+  extension Strikethrough<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T, value: System.Boolean = true) -> T [doc]  => generated
+  extension Style<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T, style: QuestPDF.Infrastructure.TextStyle) -> T [doc]  => generated
+  extension Subscript<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T) -> T [doc]  => generated
+  extension Superscript<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T) -> T [doc]  => generated
+  extension Thin<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T) -> T [doc]  => generated
+  extension Underline<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T, value: System.Boolean = true) -> T [doc]  => generated
+  extension WordSpacing<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T, factor: System.Single = 0) -> T [doc]  => generated
+  extension WrapAnywhere<T : QuestPDF.Fluent.TextSpanDescriptor>(this descriptor: T, value: System.Boolean = true) -> T [obsolete] [doc]  => generated
+
+class QuestPDF.Fluent.TextSpanDescriptor [internal-ctor]  => generated
+
+static-class QuestPDF.Fluent.TextStyleExtensions  => generated
+  extension BackgroundColor(this style: QuestPDF.Infrastructure.TextStyle, color: QuestPDF.Infrastructure.Color) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension Black(this style: QuestPDF.Infrastructure.TextStyle) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension Bold(this style: QuestPDF.Infrastructure.TextStyle) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension Color(this style: QuestPDF.Infrastructure.TextStyle, value: System.String) -> QuestPDF.Infrastructure.TextStyle [obsolete]  => generated
+  extension DecorationColor(this style: QuestPDF.Infrastructure.TextStyle, color: QuestPDF.Infrastructure.Color) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension DecorationDashed(this style: QuestPDF.Infrastructure.TextStyle) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension DecorationDotted(this style: QuestPDF.Infrastructure.TextStyle) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension DecorationDouble(this style: QuestPDF.Infrastructure.TextStyle) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension DecorationSolid(this style: QuestPDF.Infrastructure.TextStyle) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension DecorationThickness(this style: QuestPDF.Infrastructure.TextStyle, factor: System.Single) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension DecorationWavy(this style: QuestPDF.Infrastructure.TextStyle) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension DirectionAuto(this style: QuestPDF.Infrastructure.TextStyle) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension DirectionFromLeftToRight(this style: QuestPDF.Infrastructure.TextStyle) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension DirectionFromRightToLeft(this style: QuestPDF.Infrastructure.TextStyle) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension DisableFontFeature(this style: QuestPDF.Infrastructure.TextStyle, featureName: System.String) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension EnableFontFeature(this style: QuestPDF.Infrastructure.TextStyle, featureName: System.String) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension ExtraBlack(this style: QuestPDF.Infrastructure.TextStyle) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension ExtraBold(this style: QuestPDF.Infrastructure.TextStyle) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension ExtraLight(this style: QuestPDF.Infrastructure.TextStyle) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension Fallback(this style: QuestPDF.Infrastructure.TextStyle, value: QuestPDF.Infrastructure.TextStyle? = null) -> QuestPDF.Infrastructure.TextStyle [obsolete]  => generated
+  extension Fallback(this style: QuestPDF.Infrastructure.TextStyle, handler: System.Func<QuestPDF.Infrastructure.TextStyle, QuestPDF.Infrastructure.TextStyle>) -> QuestPDF.Infrastructure.TextStyle [obsolete]  => generated
+  extension FontColor(this style: QuestPDF.Infrastructure.TextStyle, color: QuestPDF.Infrastructure.Color) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension FontFamily(this style: QuestPDF.Infrastructure.TextStyle, params values: System.String[]) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension FontSize(this style: QuestPDF.Infrastructure.TextStyle, value: System.Single) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension FontType(this style: QuestPDF.Infrastructure.TextStyle, value: System.String) -> QuestPDF.Infrastructure.TextStyle [obsolete]  => generated
+  extension Italic(this style: QuestPDF.Infrastructure.TextStyle, value: System.Boolean = true) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension LetterSpacing(this style: QuestPDF.Infrastructure.TextStyle, factor: System.Single = 0) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension Light(this style: QuestPDF.Infrastructure.TextStyle) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension LineHeight(this style: QuestPDF.Infrastructure.TextStyle, factor: System.Single?) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension Medium(this style: QuestPDF.Infrastructure.TextStyle) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension NormalPosition(this style: QuestPDF.Infrastructure.TextStyle) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension NormalWeight(this style: QuestPDF.Infrastructure.TextStyle) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension Overline(this style: QuestPDF.Infrastructure.TextStyle, value: System.Boolean = true) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension SemiBold(this style: QuestPDF.Infrastructure.TextStyle) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension Size(this style: QuestPDF.Infrastructure.TextStyle, value: System.Single) -> QuestPDF.Infrastructure.TextStyle [obsolete]  => generated
+  extension Strikethrough(this style: QuestPDF.Infrastructure.TextStyle, value: System.Boolean = true) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension Subscript(this style: QuestPDF.Infrastructure.TextStyle) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension Superscript(this style: QuestPDF.Infrastructure.TextStyle) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension Thin(this style: QuestPDF.Infrastructure.TextStyle) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension Underline(this style: QuestPDF.Infrastructure.TextStyle, value: System.Boolean = true) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension Weight(this style: QuestPDF.Infrastructure.TextStyle, weight: QuestPDF.Infrastructure.FontWeight) -> QuestPDF.Infrastructure.TextStyle  => generated
+  extension WordSpacing(this style: QuestPDF.Infrastructure.TextStyle, factor: System.Single = 0) -> QuestPDF.Infrastructure.TextStyle [doc]  => generated
+  extension WrapAnywhere(this style: QuestPDF.Infrastructure.TextStyle, value: System.Boolean = true) -> QuestPDF.Infrastructure.TextStyle [obsolete] [doc]  => generated
+
+static-class QuestPDF.Fluent.TranslateExtensions [obsolete]  => generated
+  extension TranslateX(this element: QuestPDF.Infrastructure.IContainer, value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> QuestPDF.Infrastructure.IContainer [obsolete]  => generated
+  extension TranslateY(this element: QuestPDF.Infrastructure.IContainer, value: System.Single, unit: QuestPDF.Infrastructure.Unit = Point) -> QuestPDF.Infrastructure.IContainer [obsolete]  => generated
+
+static-class QuestPDF.Helpers.Colors.Amber  => generated
+  readonly Accent1: QuestPDF.Infrastructure.Color = color:#FFE57F  => generated
+  readonly Accent2: QuestPDF.Infrastructure.Color = color:#FFD740  => generated
+  readonly Accent3: QuestPDF.Infrastructure.Color = color:#FFC400  => generated
+  readonly Accent4: QuestPDF.Infrastructure.Color = color:#FFAB00  => generated
+  readonly Darken1: QuestPDF.Infrastructure.Color = color:#FFB300  => generated
+  readonly Darken2: QuestPDF.Infrastructure.Color = color:#FFA000  => generated
+  readonly Darken3: QuestPDF.Infrastructure.Color = color:#FF8F00  => generated
+  readonly Darken4: QuestPDF.Infrastructure.Color = color:#FF6F00  => generated
+  readonly Lighten1: QuestPDF.Infrastructure.Color = color:#FFCA28  => generated
+  readonly Lighten2: QuestPDF.Infrastructure.Color = color:#FFD54F  => generated
+  readonly Lighten3: QuestPDF.Infrastructure.Color = color:#FFE082  => generated
+  readonly Lighten4: QuestPDF.Infrastructure.Color = color:#FFECB3  => generated
+  readonly Lighten5: QuestPDF.Infrastructure.Color = color:#FFF8E1  => generated
+  readonly Medium: QuestPDF.Infrastructure.Color = color:#FFC107  => generated
+
+static-class QuestPDF.Helpers.Colors.BlueGrey  => generated
+  readonly Darken1: QuestPDF.Infrastructure.Color = color:#546E7A  => generated
+  readonly Darken2: QuestPDF.Infrastructure.Color = color:#455A64  => generated
+  readonly Darken3: QuestPDF.Infrastructure.Color = color:#37474F  => generated
+  readonly Darken4: QuestPDF.Infrastructure.Color = color:#263238  => generated
+  readonly Lighten1: QuestPDF.Infrastructure.Color = color:#78909C  => generated
+  readonly Lighten2: QuestPDF.Infrastructure.Color = color:#90A4AE  => generated
+  readonly Lighten3: QuestPDF.Infrastructure.Color = color:#B0BEC5  => generated
+  readonly Lighten4: QuestPDF.Infrastructure.Color = color:#CFD8DC  => generated
+  readonly Lighten5: QuestPDF.Infrastructure.Color = color:#ECEFF1  => generated
+  readonly Medium: QuestPDF.Infrastructure.Color = color:#607D8B  => generated
+
+static-class QuestPDF.Helpers.Colors.Blue  => generated
+  readonly Accent1: QuestPDF.Infrastructure.Color = color:#82B1FF  => generated
+  readonly Accent2: QuestPDF.Infrastructure.Color = color:#448AFF  => generated
+  readonly Accent3: QuestPDF.Infrastructure.Color = color:#2979FF  => generated
+  readonly Accent4: QuestPDF.Infrastructure.Color = color:#2962FF  => generated
+  readonly Darken1: QuestPDF.Infrastructure.Color = color:#1E88E5  => generated
+  readonly Darken2: QuestPDF.Infrastructure.Color = color:#1976D2  => generated
+  readonly Darken3: QuestPDF.Infrastructure.Color = color:#1565C0  => generated
+  readonly Darken4: QuestPDF.Infrastructure.Color = color:#0D47A1  => generated
+  readonly Lighten1: QuestPDF.Infrastructure.Color = color:#42A5F5  => generated
+  readonly Lighten2: QuestPDF.Infrastructure.Color = color:#64B5F6  => generated
+  readonly Lighten3: QuestPDF.Infrastructure.Color = color:#90CAF9  => generated
+  readonly Lighten4: QuestPDF.Infrastructure.Color = color:#BBDEFB  => generated
+  readonly Lighten5: QuestPDF.Infrastructure.Color = color:#E3F2FD  => generated
+  readonly Medium: QuestPDF.Infrastructure.Color = color:#2196F3  => generated
+
+static-class QuestPDF.Helpers.Colors.Brown  => generated
+  readonly Darken1: QuestPDF.Infrastructure.Color = color:#6D4C41  => generated
+  readonly Darken2: QuestPDF.Infrastructure.Color = color:#5D4037  => generated
+  readonly Darken3: QuestPDF.Infrastructure.Color = color:#4E342E  => generated
+  readonly Darken4: QuestPDF.Infrastructure.Color = color:#3E2723  => generated
+  readonly Lighten1: QuestPDF.Infrastructure.Color = color:#8D6E63  => generated
+  readonly Lighten2: QuestPDF.Infrastructure.Color = color:#A1887F  => generated
+  readonly Lighten3: QuestPDF.Infrastructure.Color = color:#BCAAA4  => generated
+  readonly Lighten4: QuestPDF.Infrastructure.Color = color:#D7CCC8  => generated
+  readonly Lighten5: QuestPDF.Infrastructure.Color = color:#EFEBE9  => generated
+  readonly Medium: QuestPDF.Infrastructure.Color = color:#795548  => generated
+
+static-class QuestPDF.Helpers.Colors.Cyan  => generated
+  readonly Accent1: QuestPDF.Infrastructure.Color = color:#84FFFF  => generated
+  readonly Accent2: QuestPDF.Infrastructure.Color = color:#18FFFF  => generated
+  readonly Accent3: QuestPDF.Infrastructure.Color = color:#00E5FF  => generated
+  readonly Accent4: QuestPDF.Infrastructure.Color = color:#00B8D4  => generated
+  readonly Darken1: QuestPDF.Infrastructure.Color = color:#00ACC1  => generated
+  readonly Darken2: QuestPDF.Infrastructure.Color = color:#0097A7  => generated
+  readonly Darken3: QuestPDF.Infrastructure.Color = color:#00838F  => generated
+  readonly Darken4: QuestPDF.Infrastructure.Color = color:#006064  => generated
+  readonly Lighten1: QuestPDF.Infrastructure.Color = color:#26C6DA  => generated
+  readonly Lighten2: QuestPDF.Infrastructure.Color = color:#4DD0E1  => generated
+  readonly Lighten3: QuestPDF.Infrastructure.Color = color:#80DEEA  => generated
+  readonly Lighten4: QuestPDF.Infrastructure.Color = color:#B2EBF2  => generated
+  readonly Lighten5: QuestPDF.Infrastructure.Color = color:#E0F7FA  => generated
+  readonly Medium: QuestPDF.Infrastructure.Color = color:#00BCD4  => generated
+
+static-class QuestPDF.Helpers.Colors.DeepOrange  => generated
+  readonly Accent1: QuestPDF.Infrastructure.Color = color:#FF9E80  => generated
+  readonly Accent2: QuestPDF.Infrastructure.Color = color:#FF6E40  => generated
+  readonly Accent3: QuestPDF.Infrastructure.Color = color:#FF3D00  => generated
+  readonly Accent4: QuestPDF.Infrastructure.Color = color:#DD2C00  => generated
+  readonly Darken1: QuestPDF.Infrastructure.Color = color:#F4511E  => generated
+  readonly Darken2: QuestPDF.Infrastructure.Color = color:#E64A19  => generated
+  readonly Darken3: QuestPDF.Infrastructure.Color = color:#D84315  => generated
+  readonly Darken4: QuestPDF.Infrastructure.Color = color:#BF360C  => generated
+  readonly Lighten1: QuestPDF.Infrastructure.Color = color:#FF7043  => generated
+  readonly Lighten2: QuestPDF.Infrastructure.Color = color:#FF8A65  => generated
+  readonly Lighten3: QuestPDF.Infrastructure.Color = color:#FFAB91  => generated
+  readonly Lighten4: QuestPDF.Infrastructure.Color = color:#FFCCBC  => generated
+  readonly Lighten5: QuestPDF.Infrastructure.Color = color:#FBE9E7  => generated
+  readonly Medium: QuestPDF.Infrastructure.Color = color:#FF5722  => generated
+
+static-class QuestPDF.Helpers.Colors.DeepPurple  => generated
+  readonly Accent1: QuestPDF.Infrastructure.Color = color:#B388FF  => generated
+  readonly Accent2: QuestPDF.Infrastructure.Color = color:#7C4DFF  => generated
+  readonly Accent3: QuestPDF.Infrastructure.Color = color:#651FFF  => generated
+  readonly Accent4: QuestPDF.Infrastructure.Color = color:#6200EA  => generated
+  readonly Darken1: QuestPDF.Infrastructure.Color = color:#5E35B1  => generated
+  readonly Darken2: QuestPDF.Infrastructure.Color = color:#512DA8  => generated
+  readonly Darken3: QuestPDF.Infrastructure.Color = color:#4527A0  => generated
+  readonly Darken4: QuestPDF.Infrastructure.Color = color:#311B92  => generated
+  readonly Lighten1: QuestPDF.Infrastructure.Color = color:#7E57C2  => generated
+  readonly Lighten2: QuestPDF.Infrastructure.Color = color:#9575CD  => generated
+  readonly Lighten3: QuestPDF.Infrastructure.Color = color:#B39DDB  => generated
+  readonly Lighten4: QuestPDF.Infrastructure.Color = color:#D1C4E9  => generated
+  readonly Lighten5: QuestPDF.Infrastructure.Color = color:#EDE7F6  => generated
+  readonly Medium: QuestPDF.Infrastructure.Color = color:#673AB7  => generated
+
+static-class QuestPDF.Helpers.Colors.Green  => generated
+  readonly Accent1: QuestPDF.Infrastructure.Color = color:#B9F6CA  => generated
+  readonly Accent2: QuestPDF.Infrastructure.Color = color:#69F0AE  => generated
+  readonly Accent3: QuestPDF.Infrastructure.Color = color:#00E676  => generated
+  readonly Accent4: QuestPDF.Infrastructure.Color = color:#00C853  => generated
+  readonly Darken1: QuestPDF.Infrastructure.Color = color:#43A047  => generated
+  readonly Darken2: QuestPDF.Infrastructure.Color = color:#388E3C  => generated
+  readonly Darken3: QuestPDF.Infrastructure.Color = color:#2E7D32  => generated
+  readonly Darken4: QuestPDF.Infrastructure.Color = color:#1B5E20  => generated
+  readonly Lighten1: QuestPDF.Infrastructure.Color = color:#66BB6A  => generated
+  readonly Lighten2: QuestPDF.Infrastructure.Color = color:#81C784  => generated
+  readonly Lighten3: QuestPDF.Infrastructure.Color = color:#A5D6A7  => generated
+  readonly Lighten4: QuestPDF.Infrastructure.Color = color:#C8E6C9  => generated
+  readonly Lighten5: QuestPDF.Infrastructure.Color = color:#E8F5E9  => generated
+  readonly Medium: QuestPDF.Infrastructure.Color = color:#4CAF50  => generated
+
+static-class QuestPDF.Helpers.Colors.Grey  => generated
+  readonly Darken1: QuestPDF.Infrastructure.Color = color:#757575  => generated
+  readonly Darken2: QuestPDF.Infrastructure.Color = color:#616161  => generated
+  readonly Darken3: QuestPDF.Infrastructure.Color = color:#424242  => generated
+  readonly Darken4: QuestPDF.Infrastructure.Color = color:#212121  => generated
+  readonly Lighten1: QuestPDF.Infrastructure.Color = color:#BDBDBD  => generated
+  readonly Lighten2: QuestPDF.Infrastructure.Color = color:#E0E0E0  => generated
+  readonly Lighten3: QuestPDF.Infrastructure.Color = color:#EEEEEE  => generated
+  readonly Lighten4: QuestPDF.Infrastructure.Color = color:#F5F5F5  => generated
+  readonly Lighten5: QuestPDF.Infrastructure.Color = color:#FAFAFA  => generated
+  readonly Medium: QuestPDF.Infrastructure.Color = color:#9E9E9E  => generated
+
+static-class QuestPDF.Helpers.Colors.Indigo  => generated
+  readonly Accent1: QuestPDF.Infrastructure.Color = color:#8C9EFF  => generated
+  readonly Accent2: QuestPDF.Infrastructure.Color = color:#536DFE  => generated
+  readonly Accent3: QuestPDF.Infrastructure.Color = color:#3D5AFE  => generated
+  readonly Accent4: QuestPDF.Infrastructure.Color = color:#304FFE  => generated
+  readonly Darken1: QuestPDF.Infrastructure.Color = color:#3949AB  => generated
+  readonly Darken2: QuestPDF.Infrastructure.Color = color:#303F9F  => generated
+  readonly Darken3: QuestPDF.Infrastructure.Color = color:#283593  => generated
+  readonly Darken4: QuestPDF.Infrastructure.Color = color:#1A237E  => generated
+  readonly Lighten1: QuestPDF.Infrastructure.Color = color:#5C6BC0  => generated
+  readonly Lighten2: QuestPDF.Infrastructure.Color = color:#7986CB  => generated
+  readonly Lighten3: QuestPDF.Infrastructure.Color = color:#9FA8DA  => generated
+  readonly Lighten4: QuestPDF.Infrastructure.Color = color:#C5CAE9  => generated
+  readonly Lighten5: QuestPDF.Infrastructure.Color = color:#E8EAF6  => generated
+  readonly Medium: QuestPDF.Infrastructure.Color = color:#3F51B5  => generated
+
+static-class QuestPDF.Helpers.Colors.LightBlue  => generated
+  readonly Accent1: QuestPDF.Infrastructure.Color = color:#80D8FF  => generated
+  readonly Accent2: QuestPDF.Infrastructure.Color = color:#40C4FF  => generated
+  readonly Accent3: QuestPDF.Infrastructure.Color = color:#00B0FF  => generated
+  readonly Accent4: QuestPDF.Infrastructure.Color = color:#0091EA  => generated
+  readonly Darken1: QuestPDF.Infrastructure.Color = color:#039BE5  => generated
+  readonly Darken2: QuestPDF.Infrastructure.Color = color:#0288D1  => generated
+  readonly Darken3: QuestPDF.Infrastructure.Color = color:#0277BD  => generated
+  readonly Darken4: QuestPDF.Infrastructure.Color = color:#01579B  => generated
+  readonly Lighten1: QuestPDF.Infrastructure.Color = color:#29B6F6  => generated
+  readonly Lighten2: QuestPDF.Infrastructure.Color = color:#4FC3F7  => generated
+  readonly Lighten3: QuestPDF.Infrastructure.Color = color:#81D4FA  => generated
+  readonly Lighten4: QuestPDF.Infrastructure.Color = color:#B3E5FC  => generated
+  readonly Lighten5: QuestPDF.Infrastructure.Color = color:#E1F5FE  => generated
+  readonly Medium: QuestPDF.Infrastructure.Color = color:#03A9F4  => generated
+
+static-class QuestPDF.Helpers.Colors.LightGreen  => generated
+  readonly Accent1: QuestPDF.Infrastructure.Color = color:#CCFF90  => generated
+  readonly Accent2: QuestPDF.Infrastructure.Color = color:#B2FF59  => generated
+  readonly Accent3: QuestPDF.Infrastructure.Color = color:#76FF03  => generated
+  readonly Accent4: QuestPDF.Infrastructure.Color = color:#64DD17  => generated
+  readonly Darken1: QuestPDF.Infrastructure.Color = color:#7CB342  => generated
+  readonly Darken2: QuestPDF.Infrastructure.Color = color:#689F38  => generated
+  readonly Darken3: QuestPDF.Infrastructure.Color = color:#558B2F  => generated
+  readonly Darken4: QuestPDF.Infrastructure.Color = color:#33691E  => generated
+  readonly Lighten1: QuestPDF.Infrastructure.Color = color:#9CCC65  => generated
+  readonly Lighten2: QuestPDF.Infrastructure.Color = color:#AED581  => generated
+  readonly Lighten3: QuestPDF.Infrastructure.Color = color:#C5E1A5  => generated
+  readonly Lighten4: QuestPDF.Infrastructure.Color = color:#DCEDC8  => generated
+  readonly Lighten5: QuestPDF.Infrastructure.Color = color:#F1F8E9  => generated
+  readonly Medium: QuestPDF.Infrastructure.Color = color:#8BC34A  => generated
+
+static-class QuestPDF.Helpers.Colors.Lime  => generated
+  readonly Accent1: QuestPDF.Infrastructure.Color = color:#F4FF81  => generated
+  readonly Accent2: QuestPDF.Infrastructure.Color = color:#EEFF41  => generated
+  readonly Accent3: QuestPDF.Infrastructure.Color = color:#C6FF00  => generated
+  readonly Accent4: QuestPDF.Infrastructure.Color = color:#AEEA00  => generated
+  readonly Darken1: QuestPDF.Infrastructure.Color = color:#C0CA33  => generated
+  readonly Darken2: QuestPDF.Infrastructure.Color = color:#AFB42B  => generated
+  readonly Darken3: QuestPDF.Infrastructure.Color = color:#9E9D24  => generated
+  readonly Darken4: QuestPDF.Infrastructure.Color = color:#827717  => generated
+  readonly Lighten1: QuestPDF.Infrastructure.Color = color:#D4E157  => generated
+  readonly Lighten2: QuestPDF.Infrastructure.Color = color:#DCE775  => generated
+  readonly Lighten3: QuestPDF.Infrastructure.Color = color:#E6EE9C  => generated
+  readonly Lighten4: QuestPDF.Infrastructure.Color = color:#F0F4C3  => generated
+  readonly Lighten5: QuestPDF.Infrastructure.Color = color:#F9FBE7  => generated
+  readonly Medium: QuestPDF.Infrastructure.Color = color:#CDDC39  => generated
+
+static-class QuestPDF.Helpers.Colors.Orange  => generated
+  readonly Accent1: QuestPDF.Infrastructure.Color = color:#FFD180  => generated
+  readonly Accent2: QuestPDF.Infrastructure.Color = color:#FFAB40  => generated
+  readonly Accent3: QuestPDF.Infrastructure.Color = color:#FF9100  => generated
+  readonly Accent4: QuestPDF.Infrastructure.Color = color:#FF6D00  => generated
+  readonly Darken1: QuestPDF.Infrastructure.Color = color:#FB8C00  => generated
+  readonly Darken2: QuestPDF.Infrastructure.Color = color:#F57C00  => generated
+  readonly Darken3: QuestPDF.Infrastructure.Color = color:#EF6C00  => generated
+  readonly Darken4: QuestPDF.Infrastructure.Color = color:#E65100  => generated
+  readonly Lighten1: QuestPDF.Infrastructure.Color = color:#FFA726  => generated
+  readonly Lighten2: QuestPDF.Infrastructure.Color = color:#FFB74D  => generated
+  readonly Lighten3: QuestPDF.Infrastructure.Color = color:#FFCC80  => generated
+  readonly Lighten4: QuestPDF.Infrastructure.Color = color:#FFE0B2  => generated
+  readonly Lighten5: QuestPDF.Infrastructure.Color = color:#FFF3E0  => generated
+  readonly Medium: QuestPDF.Infrastructure.Color = color:#FF9800  => generated
+
+static-class QuestPDF.Helpers.Colors.Pink  => generated
+  readonly Accent1: QuestPDF.Infrastructure.Color = color:#FF80AB  => generated
+  readonly Accent2: QuestPDF.Infrastructure.Color = color:#FF4081  => generated
+  readonly Accent3: QuestPDF.Infrastructure.Color = color:#F50057  => generated
+  readonly Accent4: QuestPDF.Infrastructure.Color = color:#C51162  => generated
+  readonly Darken1: QuestPDF.Infrastructure.Color = color:#D81B60  => generated
+  readonly Darken2: QuestPDF.Infrastructure.Color = color:#C2185B  => generated
+  readonly Darken3: QuestPDF.Infrastructure.Color = color:#AD1457  => generated
+  readonly Darken4: QuestPDF.Infrastructure.Color = color:#880E4F  => generated
+  readonly Lighten1: QuestPDF.Infrastructure.Color = color:#EC407A  => generated
+  readonly Lighten2: QuestPDF.Infrastructure.Color = color:#F06292  => generated
+  readonly Lighten3: QuestPDF.Infrastructure.Color = color:#F48FB1  => generated
+  readonly Lighten4: QuestPDF.Infrastructure.Color = color:#F8BBD0  => generated
+  readonly Lighten5: QuestPDF.Infrastructure.Color = color:#FCE4EC  => generated
+  readonly Medium: QuestPDF.Infrastructure.Color = color:#E91E63  => generated
+
+static-class QuestPDF.Helpers.Colors.Purple  => generated
+  readonly Accent1: QuestPDF.Infrastructure.Color = color:#EA80FC  => generated
+  readonly Accent2: QuestPDF.Infrastructure.Color = color:#E040FB  => generated
+  readonly Accent3: QuestPDF.Infrastructure.Color = color:#D500F9  => generated
+  readonly Accent4: QuestPDF.Infrastructure.Color = color:#AA00FF  => generated
+  readonly Darken1: QuestPDF.Infrastructure.Color = color:#8E24AA  => generated
+  readonly Darken2: QuestPDF.Infrastructure.Color = color:#7B1FA2  => generated
+  readonly Darken3: QuestPDF.Infrastructure.Color = color:#6A1B9A  => generated
+  readonly Darken4: QuestPDF.Infrastructure.Color = color:#4A148C  => generated
+  readonly Lighten1: QuestPDF.Infrastructure.Color = color:#AB47BC  => generated
+  readonly Lighten2: QuestPDF.Infrastructure.Color = color:#BA68C8  => generated
+  readonly Lighten3: QuestPDF.Infrastructure.Color = color:#CE93D8  => generated
+  readonly Lighten4: QuestPDF.Infrastructure.Color = color:#E1BEE7  => generated
+  readonly Lighten5: QuestPDF.Infrastructure.Color = color:#F3E5F5  => generated
+  readonly Medium: QuestPDF.Infrastructure.Color = color:#9C27B0  => generated
+
+static-class QuestPDF.Helpers.Colors.Red  => generated
+  readonly Accent1: QuestPDF.Infrastructure.Color = color:#FF8A80  => generated
+  readonly Accent2: QuestPDF.Infrastructure.Color = color:#FF5252  => generated
+  readonly Accent3: QuestPDF.Infrastructure.Color = color:#FF1744  => generated
+  readonly Accent4: QuestPDF.Infrastructure.Color = color:#D50000  => generated
+  readonly Darken1: QuestPDF.Infrastructure.Color = color:#E53935  => generated
+  readonly Darken2: QuestPDF.Infrastructure.Color = color:#D32F2F  => generated
+  readonly Darken3: QuestPDF.Infrastructure.Color = color:#C62828  => generated
+  readonly Darken4: QuestPDF.Infrastructure.Color = color:#B71C1C  => generated
+  readonly Lighten1: QuestPDF.Infrastructure.Color = color:#EF5350  => generated
+  readonly Lighten2: QuestPDF.Infrastructure.Color = color:#E57373  => generated
+  readonly Lighten3: QuestPDF.Infrastructure.Color = color:#EF9A9A  => generated
+  readonly Lighten4: QuestPDF.Infrastructure.Color = color:#FFCDD2  => generated
+  readonly Lighten5: QuestPDF.Infrastructure.Color = color:#FFEBEE  => generated
+  readonly Medium: QuestPDF.Infrastructure.Color = color:#F44336  => generated
+
+static-class QuestPDF.Helpers.Colors.Teal  => generated
+  readonly Accent1: QuestPDF.Infrastructure.Color = color:#A7FFEB  => generated
+  readonly Accent2: QuestPDF.Infrastructure.Color = color:#64FFDA  => generated
+  readonly Accent3: QuestPDF.Infrastructure.Color = color:#1DE9B6  => generated
+  readonly Accent4: QuestPDF.Infrastructure.Color = color:#00BFA5  => generated
+  readonly Darken1: QuestPDF.Infrastructure.Color = color:#00897B  => generated
+  readonly Darken2: QuestPDF.Infrastructure.Color = color:#00796B  => generated
+  readonly Darken3: QuestPDF.Infrastructure.Color = color:#00695C  => generated
+  readonly Darken4: QuestPDF.Infrastructure.Color = color:#004D40  => generated
+  readonly Lighten1: QuestPDF.Infrastructure.Color = color:#26A69A  => generated
+  readonly Lighten2: QuestPDF.Infrastructure.Color = color:#4DB6AC  => generated
+  readonly Lighten3: QuestPDF.Infrastructure.Color = color:#80CBC4  => generated
+  readonly Lighten4: QuestPDF.Infrastructure.Color = color:#B2DFDB  => generated
+  readonly Lighten5: QuestPDF.Infrastructure.Color = color:#E0F2F1  => generated
+  readonly Medium: QuestPDF.Infrastructure.Color = color:#009688  => generated
+
+static-class QuestPDF.Helpers.Colors.Yellow  => generated
+  readonly Accent1: QuestPDF.Infrastructure.Color = color:#FFFF8D  => generated
+  readonly Accent2: QuestPDF.Infrastructure.Color = color:#FFFF00  => generated
+  readonly Accent3: QuestPDF.Infrastructure.Color = color:#FFEA00  => generated
+  readonly Accent4: QuestPDF.Infrastructure.Color = color:#FFD600  => generated
+  readonly Darken1: QuestPDF.Infrastructure.Color = color:#FDD835  => generated
+  readonly Darken2: QuestPDF.Infrastructure.Color = color:#FBC02D  => generated
+  readonly Darken3: QuestPDF.Infrastructure.Color = color:#F9A825  => generated
+  readonly Darken4: QuestPDF.Infrastructure.Color = color:#F57F17  => generated
+  readonly Lighten1: QuestPDF.Infrastructure.Color = color:#FFEE58  => generated
+  readonly Lighten2: QuestPDF.Infrastructure.Color = color:#FFF176  => generated
+  readonly Lighten3: QuestPDF.Infrastructure.Color = color:#FFF59D  => generated
+  readonly Lighten4: QuestPDF.Infrastructure.Color = color:#FFF9C4  => generated
+  readonly Lighten5: QuestPDF.Infrastructure.Color = color:#FFFDE7  => generated
+  readonly Medium: QuestPDF.Infrastructure.Color = color:#FFEB3B  => generated
+
+static-class QuestPDF.Helpers.Colors [doc]  => generated
+  readonly Black: QuestPDF.Infrastructure.Color = color:#000000  => generated
+  readonly Transparent: QuestPDF.Infrastructure.Color = color:#00000000  => generated
+  readonly White: QuestPDF.Infrastructure.Color = color:#FFFFFF  => generated
+
+static-class QuestPDF.Helpers.FontFeatures  => generated
+  const AboveBaseForms: System.String = string:abvf  => generated
+  const AboveBaseMarkPositioning: System.String = string:abvm  => generated
+  const AboveBaseSubstitutions: System.String = string:abvs  => generated
+  const AccessAllAlternates: System.String = string:aalt  => generated
+  const Akhand: System.String = string:akhn  => generated
+  const AlternateAnnotationForms: System.String = string:nalt  => generated
+  const AlternateHalfWidths: System.String = string:halt  => generated
+  const AlternateVerticalHalfMetrics: System.String = string:vhal  => generated
+  const AlternateVerticalMetrics: System.String = string:valt  => generated
+  const AlternativeFractions: System.String = string:afrc  => generated
+  const BelowBaseForms: System.String = string:blwf  => generated
+  const BelowBaseMarkPositioning: System.String = string:blwm  => generated
+  const BelowBaseSubstitutions: System.String = string:blws  => generated
+  const CapitalSpacing: System.String = string:cpsp  => generated
+  const CaseSensitiveForms: System.String = string:case  => generated
+  const CenteredCjkPunctuation: System.String = string:cpct  => generated
+  const ConjunctFormAfterRo: System.String = string:cfar  => generated
+  const ConjunctForms: System.String = string:cjct  => generated
+  const ContextualAlternates: System.String = string:calt  => generated
+  const ContextualHalfWidthSpacing: System.String = string:chws  => generated
+  const ContextualLigatures: System.String = string:clig  => generated
+  const ContextualSwash: System.String = string:cswh  => generated
+  const CursivePositioning: System.String = string:curs  => generated
+  const Denominators: System.String = string:dnom  => generated
+  const DiscretionaryLigatures: System.String = string:dlig  => generated
+  const Distances: System.String = string:dist  => generated
+  const DotlessForms: System.String = string:dtls  => generated
+  const ExpertForms: System.String = string:expt  => generated
+  const FinalGlyphOnLineAlternates: System.String = string:falt  => generated
+  const FlattenedAccentForms: System.String = string:flac  => generated
+  const Fractions: System.String = string:frac  => generated
+  const FullWidths: System.String = string:fwid  => generated
+  const GlyphCompositionDecomposition: System.String = string:ccmp  => generated
+  const HalantForms: System.String = string:haln  => generated
+  const HalfForms: System.String = string:half  => generated
+  const HalfWidths: System.String = string:hwid  => generated
+  const Hangul: System.String = string:hngl  => generated
+  const HistoricalForms: System.String = string:hist  => generated
+  const HistoricalLigatures: System.String = string:hlig  => generated
+  const HojoKanjiForms: System.String = string:hojo [doc]  => generated
+  const HorizontalKanaAlternates: System.String = string:hkna  => generated
+  const InitialForms: System.String = string:init  => generated
+  const IsolatedForms: System.String = string:isol  => generated
+  const Italics: System.String = string:ital  => generated
+  const JIS2004Forms: System.String = string:jp04  => generated
+  const JIS78Forms: System.String = string:jp78  => generated
+  const JIS83Forms: System.String = string:jp83  => generated
+  const JIS90Forms: System.String = string:jp90  => generated
+  const JustificationAlternates: System.String = string:jalt  => generated
+  const Kerning: System.String = string:kern  => generated
+  const KerningForAlternateProportionalVerticalMetrics: System.String = string:vapk  => generated
+  const KerningForAlternateProportionalWidths: System.String = string:apkn  => generated
+  const LeadingJamoForms: System.String = string:ljmo  => generated
+  const LeftBounds: System.String = string:lfbd  => generated
+  const LeftToRightAlternates: System.String = string:ltra  => generated
+  const LeftToRightMirroredForms: System.String = string:ltrm  => generated
+  const LiningFigures: System.String = string:lnum  => generated
+  const LocalizedForms: System.String = string:locl  => generated
+  const MarkPositioning: System.String = string:mark  => generated
+  const MarkPositioningViaSubstitution: System.String = string:mset  => generated
+  const MarkToMarkPositioning: System.String = string:mkmk  => generated
+  const MathScriptStyleAlternates: System.String = string:ssty  => generated
+  const MathematicalGreek: System.String = string:mgrk  => generated
+  const MedialForms: System.String = string:medi  => generated
+  const MedialForms2: System.String = string:med2  => generated
+  const NlcKanjiForms: System.String = string:nlck  => generated
+  const NuktaForms: System.String = string:nukt  => generated
+  const Numerators: System.String = string:numr  => generated
+  const OldstyleFigures: System.String = string:onum  => generated
+  const OpticalBounds: System.String = string:opbd  => generated
+  const OpticalSize: System.String = string:size  => generated
+  const Ordinals: System.String = string:ordn  => generated
+  const Ornaments: System.String = string:ornm  => generated
+  const PetiteCapitals: System.String = string:pcap  => generated
+  const PetiteCapitalsFromCapitals: System.String = string:c2pc  => generated
+  const PostBaseForms: System.String = string:pstf  => generated
+  const PostBaseSubstitutions: System.String = string:psts  => generated
+  const PreBaseForms: System.String = string:pref  => generated
+  const PreBaseSubstitutions: System.String = string:pres  => generated
+  const ProportionalAlternateVerticalMetrics: System.String = string:vpal  => generated
+  const ProportionalAlternateWidths: System.String = string:palt  => generated
+  const ProportionalFigures: System.String = string:pnum  => generated
+  const ProportionalKana: System.String = string:pkna  => generated
+  const ProportionalWidths: System.String = string:pwid  => generated
+  const QuarterWidths: System.String = string:qwid  => generated
+  const RakarForms: System.String = string:rkrf  => generated
+  const Randomize: System.String = string:rand  => generated
+  const RephForm: System.String = string:rphf  => generated
+  const RequiredContextualAlternates: System.String = string:rclt  => generated
+  const RequiredLigatures: System.String = string:rlig  => generated
+  const RequiredVariationAlternates: System.String = string:rvrn  => generated
+  const RightBounds: System.String = string:rtbd  => generated
+  const RightToLeftAlternates: System.String = string:rtla  => generated
+  const RightToLeftMirroredForms: System.String = string:rtlm  => generated
+  const RubyNotationForms: System.String = string:ruby  => generated
+  const ScientificInferiors: System.String = string:sinf  => generated
+  const SimplifiedForms: System.String = string:smpl  => generated
+  const SlashedZero: System.String = string:zero  => generated
+  const SmallCapitals: System.String = string:smcp  => generated
+  const SmallCapitalsFromCapitals: System.String = string:c2sc  => generated
+  const StandardLigatures: System.String = string:liga  => generated
+  const StretchingGlyphDecomposition: System.String = string:stch  => generated
+  const StylisticAlternates: System.String = string:salt  => generated
+  const Subscript: System.String = string:subs  => generated
+  const Superscript: System.String = string:sups  => generated
+  const Swash: System.String = string:swsh  => generated
+  const TabularFigures: System.String = string:tnum  => generated
+  const TerminalForms: System.String = string:fina  => generated
+  const TerminalForms2: System.String = string:fin2  => generated
+  const TerminalForms3: System.String = string:fin3  => generated
+  const ThirdWidths: System.String = string:twid  => generated
+  const Titling: System.String = string:titl  => generated
+  const TraditionalForms: System.String = string:trad  => generated
+  const TraditionalNameForms: System.String = string:tnam  => generated
+  const TrailingJamoForms: System.String = string:tjmo  => generated
+  const Unicase: System.String = string:unic  => generated
+  const VattuVariants: System.String = string:vatu  => generated
+  const VerticalAlternates: System.String = string:vert  => generated
+  const VerticalAlternatesAndRotation: System.String = string:vrt2  => generated
+  const VerticalAlternatesForRotation: System.String = string:vrtr  => generated
+  const VerticalContextualHalfWidthSpacing: System.String = string:vchw  => generated
+  const VerticalKanaAlternates: System.String = string:vkna  => generated
+  const VerticalKerning: System.String = string:vkrn  => generated
+  const VowelJamoForms: System.String = string:vjmo  => generated
+  static-method CharacterVariant(value: System.Int32) -> System.String  => generated
+  static-method StylisticSet(value: System.Int32) -> System.String  => generated
+
+static-class QuestPDF.Helpers.Fonts [doc]  => generated
+  const Arial: System.String = string:Arial  => generated
+  const Calibri: System.String = string:Calibri  => generated
+  const Cambria: System.String = string:Cambria  => generated
+  const Candara: System.String = string:Candara  => generated
+  const ComicSans: System.String = string:Comic Sans MS  => generated
+  const Consolas: System.String = string:Consolas  => generated
+  const Corbel: System.String = string:Corbel  => generated
+  const Courier: System.String = string:Courier  => generated
+  const CourierNew: System.String = string:Courier New  => generated
+  const Georgia: System.String = string:Georgia  => generated
+  const Impact: System.String = string:Impact  => generated
+  const Lato: System.String = string:Lato  => generated
+  const LucidaConsole: System.String = string:Lucida Console  => generated
+  const SegoeSD: System.String = string:Segoe SD  => generated
+  const SegoeUI: System.String = string:Segoe UI  => generated
+  const Tahoma: System.String = string:Tahoma  => generated
+  const TimesNewRoman: System.String = string:Times New Roman  => generated
+  const TimesRoman: System.String = string:Times Roman  => generated
+  const Trebuchet: System.String = string:Trebuchet MS  => generated
+  const Verdana: System.String = string:Verdana  => generated
+
+static-class QuestPDF.Helpers.PageSizeExtensions  => generated
+  extension Landscape(this size: QuestPDF.Helpers.PageSize) -> QuestPDF.Helpers.PageSize [doc]  => generated
+  extension Portrait(this size: QuestPDF.Helpers.PageSize) -> QuestPDF.Helpers.PageSize [doc]  => generated
+
+class QuestPDF.Helpers.PageSize [doc]  => generated
+  readonly Height: System.Single  => generated
+  readonly Width: System.Single  => generated
+  ctor (width: System.Single, height: System.Single, unit: QuestPDF.Infrastructure.Unit = Point)  => generated
+  operator op_Implicit(pageSize: QuestPDF.Helpers.PageSize) -> QuestPDF.Infrastructure.Size  => generated
+
+static-class QuestPDF.Helpers.PageSizes [doc]  => generated
+  const PointsPerInch: System.Int32 = number:72  => generated
+  static-property A0: QuestPDF.Helpers.PageSize { get; } = pagesize:2384x3370  => generated
+  static-property A1: QuestPDF.Helpers.PageSize { get; } = pagesize:1684x2384  => generated
+  static-property A10: QuestPDF.Helpers.PageSize { get; } = pagesize:74x105  => generated
+  static-property A2: QuestPDF.Helpers.PageSize { get; } = pagesize:1191x1684  => generated
+  static-property A3: QuestPDF.Helpers.PageSize { get; } = pagesize:842x1191  => generated
+  static-property A4: QuestPDF.Helpers.PageSize { get; } = pagesize:595x842  => generated
+  static-property A5: QuestPDF.Helpers.PageSize { get; } = pagesize:420x595  => generated
+  static-property A6: QuestPDF.Helpers.PageSize { get; } = pagesize:298x420  => generated
+  static-property A7: QuestPDF.Helpers.PageSize { get; } = pagesize:210x298  => generated
+  static-property A8: QuestPDF.Helpers.PageSize { get; } = pagesize:147x210  => generated
+  static-property A9: QuestPDF.Helpers.PageSize { get; } = pagesize:105x147  => generated
+  static-property ARCH_A: QuestPDF.Helpers.PageSize { get; } = pagesize:648x864  => generated
+  static-property ARCH_B: QuestPDF.Helpers.PageSize { get; } = pagesize:864x1296  => generated
+  static-property ARCH_C: QuestPDF.Helpers.PageSize { get; } = pagesize:1296x1728  => generated
+  static-property ARCH_D: QuestPDF.Helpers.PageSize { get; } = pagesize:1728x2592  => generated
+  static-property ARCH_E: QuestPDF.Helpers.PageSize { get; } = pagesize:2592x3456  => generated
+  static-property ARCH_E1: QuestPDF.Helpers.PageSize { get; } = pagesize:2160x3024  => generated
+  static-property ARCH_E2: QuestPDF.Helpers.PageSize { get; } = pagesize:1872x2736  => generated
+  static-property ARCH_E3: QuestPDF.Helpers.PageSize { get; } = pagesize:1944x2808  => generated
+  static-property B0: QuestPDF.Helpers.PageSize { get; } = pagesize:2835x4008  => generated
+  static-property B1: QuestPDF.Helpers.PageSize { get; } = pagesize:2004x2835  => generated
+  static-property B10: QuestPDF.Helpers.PageSize { get; } = pagesize:88x125  => generated
+  static-property B2: QuestPDF.Helpers.PageSize { get; } = pagesize:1417x2004  => generated
+  static-property B3: QuestPDF.Helpers.PageSize { get; } = pagesize:1001x1417  => generated
+  static-property B4: QuestPDF.Helpers.PageSize { get; } = pagesize:709x1001  => generated
+  static-property B5: QuestPDF.Helpers.PageSize { get; } = pagesize:499x709  => generated
+  static-property B6: QuestPDF.Helpers.PageSize { get; } = pagesize:354x499  => generated
+  static-property B7: QuestPDF.Helpers.PageSize { get; } = pagesize:249x354  => generated
+  static-property B8: QuestPDF.Helpers.PageSize { get; } = pagesize:176x249  => generated
+  static-property B9: QuestPDF.Helpers.PageSize { get; } = pagesize:125x176  => generated
+  static-property C0: QuestPDF.Helpers.PageSize { get; } = pagesize:2599x3677  => generated
+  static-property C1: QuestPDF.Helpers.PageSize { get; } = pagesize:1837x2599  => generated
+  static-property C10: QuestPDF.Helpers.PageSize { get; } = pagesize:79x113  => generated
+  static-property C2: QuestPDF.Helpers.PageSize { get; } = pagesize:1298x1837  => generated
+  static-property C3: QuestPDF.Helpers.PageSize { get; } = pagesize:918x1298  => generated
+  static-property C4: QuestPDF.Helpers.PageSize { get; } = pagesize:649x918  => generated
+  static-property C5: QuestPDF.Helpers.PageSize { get; } = pagesize:459x649  => generated
+  static-property C6: QuestPDF.Helpers.PageSize { get; } = pagesize:323x459  => generated
+  static-property C7: QuestPDF.Helpers.PageSize { get; } = pagesize:230x323  => generated
+  static-property C8: QuestPDF.Helpers.PageSize { get; } = pagesize:162x230  => generated
+  static-property C9: QuestPDF.Helpers.PageSize { get; } = pagesize:113x162  => generated
+  static-property Env10: QuestPDF.Helpers.PageSize { get; } = pagesize:297x684  => generated
+  static-property EnvC4: QuestPDF.Helpers.PageSize { get; } = pagesize:649x918  => generated
+  static-property EnvDL: QuestPDF.Helpers.PageSize { get; } = pagesize:312x624  => generated
+  static-property Executive: QuestPDF.Helpers.PageSize { get; } = pagesize:522x756  => generated
+  static-property Ledger: QuestPDF.Helpers.PageSize { get; } = pagesize:792x1224  => generated
+  static-property Legal: QuestPDF.Helpers.PageSize { get; } = pagesize:612x1008  => generated
+  static-property Letter: QuestPDF.Helpers.PageSize { get; } = pagesize:612x792  => generated
+  static-property Postcard: QuestPDF.Helpers.PageSize { get; } = pagesize:284x419  => generated
+  static-property Tabloid: QuestPDF.Helpers.PageSize { get; } = pagesize:1224x792  => generated
+
+static-class QuestPDF.Helpers.Placeholders  => manual
+  readonly Random: System.Random  => manual
+  static-method BackgroundColor() -> QuestPDF.Infrastructure.Color [doc]  => manual
+  static-method Color() -> QuestPDF.Infrastructure.Color [doc]  => manual
+  static-method DateTime() -> System.String [doc]  => manual
+  static-method Decimal() -> System.String [doc]  => manual
+  static-method Email() -> System.String [doc]  => manual
+  static-method Image(size: QuestPDF.Infrastructure.ImageSize) -> System.Byte[] [doc]  => manual
+  static-method Image(width: System.Int32, height: System.Int32) -> System.Byte[] [doc]  => manual
+  static-method Integer() -> System.String [doc]  => manual
+  static-method Label() -> System.String [doc]  => manual
+  static-method LongDate() -> System.String [doc]  => manual
+  static-method LoremIpsum() -> System.String [doc]  => manual
+  static-method Name() -> System.String [doc]  => manual
+  static-method Paragraph() -> System.String [doc]  => manual
+  static-method Paragraphs() -> System.String [doc]  => manual
+  static-method Percent() -> System.String [doc]  => manual
+  static-method PhoneNumber() -> System.String [doc]  => manual
+  static-method Price() -> System.String [doc]  => manual
+  static-method Question() -> System.String [doc]  => manual
+  static-method Sentence() -> System.String [doc]  => manual
+  static-method ShortDate() -> System.String [doc]  => manual
+  static-method Time() -> System.String [doc]  => manual
+  static-method WebpageUrl() -> System.String [doc]  => manual
+
+enum QuestPDF.Infrastructure.AspectRatioOption implements System.IComparable, System.IConvertible, System.IFormattable, System.ISpanFormattable  => generated
+  value FitWidth = 0 [doc]
+  value FitHeight = 1 [doc]
+  value FitArea = 2 [doc]
+
+class QuestPDF.Infrastructure.BoxShadowStyle [doc]  => generated
+  property Blur: System.Single { get; set; } [doc]  => generated
+  property Color: QuestPDF.Infrastructure.Color { get; set; } [doc]  => generated
+  property OffsetX: System.Single { get; set; } [doc]  => generated
+  property OffsetY: System.Single { get; set; } [doc]  => generated
+  property Spread: System.Single { get; set; } [doc]  => generated
+  ctor ()  => generated
+
+struct QuestPDF.Infrastructure.Color  => generated
+  property Alpha: System.Byte { get; }  => generated
+  property Blue: System.Byte { get; }  => generated
+  property Green: System.Byte { get; }  => generated
+  property Hex: System.UInt32 { get; }  => generated
+  property Red: System.Byte { get; }  => generated
+  ctor (hex: System.UInt32) [doc]  => generated
+  static-method FromARGB(alpha: System.Byte, red: System.Byte, green: System.Byte, blue: System.Byte) -> QuestPDF.Infrastructure.Color [doc]  => generated
+  static-method FromHex(hex: System.String) -> QuestPDF.Infrastructure.Color [doc]  => generated
+  static-method FromRGB(red: System.Byte, green: System.Byte, blue: System.Byte) -> QuestPDF.Infrastructure.Color [doc]  => generated
+  method ToString() -> System.String  => infrastructure
+  method WithAlpha(alpha: System.Byte) -> QuestPDF.Infrastructure.Color [doc]  => generated
+  method WithAlpha(alpha: System.Single) -> QuestPDF.Infrastructure.Color [doc]  => generated
+  operator op_Implicit(color: QuestPDF.Infrastructure.Color) -> System.String  => unsupported: conversion to String collides with toString(); use toString() instead
+  operator op_Implicit(color: QuestPDF.Infrastructure.Color) -> System.UInt32  => generated
+  operator op_Implicit(hex: System.String) -> QuestPDF.Infrastructure.Color  => generated
+  operator op_Implicit(hex: System.UInt32) -> QuestPDF.Infrastructure.Color  => generated
+
+enum QuestPDF.Infrastructure.ContentDirection implements System.IComparable, System.IConvertible, System.IFormattable, System.ISpanFormattable  => generated
+  value LeftToRight = 0 [doc]
+  value RightToLeft = 1 [doc]
+
+class QuestPDF.Infrastructure.DocumentMetadata  => generated
+  property ApplyCaching: System.Boolean { get; set; } [obsolete]  => generated
+  property ApplyDebugging: System.Boolean { get; set; } [obsolete]  => generated
+  property Author: System.String? { get; set; } [doc]  => generated
+  property CreationDate: System.DateTimeOffset { get; set; } [doc]  => generated
+  property Creator: System.String? { get; set; } [doc]  => generated
+  static-property Default: QuestPDF.Infrastructure.DocumentMetadata { get; }  => generated
+  property DocumentLayoutExceptionThreshold: System.Int32 { get; set; } [obsolete]  => generated
+  property ImageQuality: System.Int32? { get; set; } [obsolete]  => generated
+  property Keywords: System.String? { get; set; } [doc]  => generated
+  property Language: System.String? { get; set; } [doc]  => generated
+  property ModifiedDate: System.DateTimeOffset { get; set; } [doc]  => generated
+  property PdfA: System.Boolean? { get; set; } [obsolete]  => generated
+  property Producer: System.String? { get; set; } [doc]  => generated
+  property RasterDpi: System.Int32? { get; set; } [obsolete]  => generated
+  property Subject: System.String? { get; set; } [doc]  => generated
+  property Title: System.String? { get; set; } [doc]  => generated
+  ctor ()  => generated
+
+class QuestPDF.Infrastructure.DocumentSettings  => generated
+  const DefaultRasterDpi: System.Int32 = number:72  => generated
+  property CompressDocument: System.Boolean { get; set; } [doc]  => generated
+  property ContentDirection: QuestPDF.Infrastructure.ContentDirection { get; set; }  => generated
+  static-property Default: QuestPDF.Infrastructure.DocumentSettings { get; }  => generated
+  property ImageCompressionQuality: QuestPDF.Infrastructure.ImageCompressionQuality { get; set; } [doc]  => generated
+  property ImageRasterDpi: System.Int32 { get; set; } [doc]  => generated
+  property PDFA_Conformance: QuestPDF.Infrastructure.PDFA_Conformance { get; set; } [doc]  => generated
+  property PDFUA_Conformance: QuestPDF.Infrastructure.PDFUA_Conformance { get; set; } [doc]  => generated
+  property PdfA: System.Boolean { get; set; } [obsolete]  => generated
+  ctor ()  => generated
+
+class QuestPDF.Infrastructure.DynamicComponentComposeResult [doc]  => generated
+  property Content: QuestPDF.Infrastructure.IElement { get; set; } [doc]  => generated
+  property HasMoreContent: System.Boolean { get; set; } [doc]  => generated
+  ctor ()  => generated
+
+static-class QuestPDF.Infrastructure.EmptyContainer  => generated
+  static-method Create() -> QuestPDF.Infrastructure.IContainer [doc]  => generated
+
+enum QuestPDF.Infrastructure.FontWeight implements System.IComparable, System.IConvertible, System.IFormattable, System.ISpanFormattable  => generated
+  value Thin = 100
+  value ExtraLight = 200
+  value Light = 300
+  value Normal = 400
+  value Medium = 500
+  value SemiBold = 600
+  value Bold = 700
+  value ExtraBold = 800
+  value Black = 900
+  value ExtraBlack = 1000
+
+enum QuestPDF.Infrastructure.HorizontalAlignment implements System.IComparable, System.IConvertible, System.IFormattable, System.ISpanFormattable  => generated
+  value Left = 0
+  value Center = 1
+  value Right = 2
+
+interface QuestPDF.Infrastructure.IComponent [doc]  => generated
+  method Compose(container: QuestPDF.Infrastructure.IContainer) -> System.Void [doc]  => generated
+
+interface QuestPDF.Infrastructure.IContainer [doc]  => generated
+  property Child: QuestPDF.Infrastructure.IElement? { get; set; }  => generated
+
+interface QuestPDF.Infrastructure.IDocumentContainer [doc]  => generated
+
+interface QuestPDF.Infrastructure.IDocument [doc]  => generated
+  method Compose(container: QuestPDF.Infrastructure.IDocumentContainer) -> System.Void [doc]  => generated
+  method GetMetadata() -> QuestPDF.Infrastructure.DocumentMetadata [doc]  => generated
+  method GetSettings() -> QuestPDF.Infrastructure.DocumentSettings [doc]  => generated
+
+interface QuestPDF.Infrastructure.IDynamicComponent [doc]  => generated
+  method Compose(context: QuestPDF.Elements.DynamicContext) -> QuestPDF.Infrastructure.DynamicComponentComposeResult [doc]  => generated
+
+interface QuestPDF.Infrastructure.IDynamicComponent<TState : struct & new()> implements QuestPDF.Infrastructure.IDynamicComponent [doc]  => unsupported: Kotlin forbids declaring IDynamicComponent and IDynamicComponent<TState> in one package; the non-generic variant is generated
+  property State: TState { get; set; } [doc]  => unsupported: declared on skipped type (Kotlin forbids declaring IDynamicComponent and IDynamicComponent<TState> in one package; the non-generic variant is generated)
+
+interface QuestPDF.Infrastructure.IElement [doc]  => generated
+
+enum QuestPDF.Infrastructure.ImageCompressionQuality implements System.IComparable, System.IConvertible, System.IFormattable, System.ISpanFormattable  => generated
+  value Best = 0 [doc]
+  value VeryHigh = 1 [doc]
+  value High = 2 [doc]
+  value Medium = 3 [doc]
+  value Low = 4 [doc]
+  value VeryLow = 5 [doc]
+
+enum QuestPDF.Infrastructure.ImageFormat implements System.IComparable, System.IConvertible, System.IFormattable, System.ISpanFormattable  => generated
+  value Jpeg = 0
+  value Png = 1
+  value Webp = 2
+
+class QuestPDF.Infrastructure.ImageGenerationSettings  => generated
+  static-property Default: QuestPDF.Infrastructure.ImageGenerationSettings { get; }  => generated
+  property ImageCompressionQuality: QuestPDF.Infrastructure.ImageCompressionQuality { get; set; } [doc]  => generated
+  property ImageFormat: QuestPDF.Infrastructure.ImageFormat { get; set; } [doc]  => generated
+  property RasterDpi: System.Int32 { get; set; } [doc]  => generated
+  ctor ()  => generated
+
+enum QuestPDF.Infrastructure.ImageScaling implements System.IComparable, System.IConvertible, System.IFormattable, System.ISpanFormattable  => generated
+  value FitWidth = 0
+  value FitHeight = 1
+  value FitArea = 2
+  value Resize = 3
+
+struct QuestPDF.Infrastructure.ImageSize  => generated
+  readonly Height: System.Int32  => generated
+  readonly Width: System.Int32  => generated
+  ctor (width: System.Int32, height: System.Int32)  => generated
+
+class QuestPDF.Infrastructure.Image implements System.IDisposable [internal-ctor] [doc]  => generated
+  property Size: QuestPDF.Infrastructure.ImageSize { get; }  => generated
+  method Dispose() -> System.Void  => generated
+  static-method FromBinaryData(imageBytes: System.Byte[]) -> QuestPDF.Infrastructure.Image [doc]  => generated
+  static-method FromFile(filePath: System.String) -> QuestPDF.Infrastructure.Image [doc]  => generated
+  static-method FromStream(stream: System.IO.Stream) -> QuestPDF.Infrastructure.Image [doc]  => unsupported: System.IO.Stream has no direction-neutral bridge mapping; byte[] and file-path overloads cover this scenario
+
+enum QuestPDF.Infrastructure.LicenseType implements System.IComparable, System.IConvertible, System.IFormattable, System.ISpanFormattable [doc]  => generated
+  value Evaluation = 0 [doc]
+  value Community = 1 [doc]
+  value Professional = 2 [doc]
+  value Enterprise = 3 [doc]
+
+class QuestPDF.Infrastructure.MergedDocument implements QuestPDF.Infrastructure.IDocument [internal-ctor]  => generated
+  method Compose(container: QuestPDF.Infrastructure.IDocumentContainer) -> System.Void  => generated
+  method GetMetadata() -> QuestPDF.Infrastructure.DocumentMetadata  => generated
+  method GetSettings() -> QuestPDF.Infrastructure.DocumentSettings  => generated
+  method UseContinuousPageNumbers() -> QuestPDF.Infrastructure.MergedDocument [doc]  => generated
+  method UseOriginalPageNumbers() -> QuestPDF.Infrastructure.MergedDocument [doc]  => generated
+  method WithMetadata(metadata: QuestPDF.Infrastructure.DocumentMetadata) -> QuestPDF.Infrastructure.MergedDocument  => generated
+  method WithSettings(settings: QuestPDF.Infrastructure.DocumentSettings) -> QuestPDF.Infrastructure.MergedDocument  => generated
+
+enum QuestPDF.Infrastructure.PDFA_Conformance implements System.IComparable, System.IConvertible, System.IFormattable, System.ISpanFormattable  => generated
+  value None = 0
+  value PDFA_2A = 3
+  value PDFA_2B = 4
+  value PDFA_2U = 5
+  value PDFA_3A = 6
+  value PDFA_3B = 7
+  value PDFA_3U = 8
+
+enum QuestPDF.Infrastructure.PDFUA_Conformance implements System.IComparable, System.IConvertible, System.IFormattable, System.ISpanFormattable  => generated
+  value None = 0
+  value PDFUA_1 = 1
+
+class QuestPDF.Infrastructure.PageElementLocation  => generated
+  property Height: System.Single { get; set; }  => generated
+  property Id: System.String { get; set; }  => generated
+  property PageNumber: System.Int32 { get; set; }  => generated
+  property Transform: System.Numerics.Matrix4x4 { get; set; }  => unsupported: references external type System.Numerics.Matrix4x4 with no Kotlin mapping
+  property Width: System.Single { get; set; }  => generated
+  property X: System.Single { get; set; }  => generated
+  property Y: System.Single { get; set; }  => generated
+  ctor ()  => generated
+
+struct QuestPDF.Infrastructure.Size  => generated
+  const Epsilon: System.Single = number:0.01  => generated
+  readonly Height: System.Single  => generated
+  const Infinity: System.Single = number:14400  => generated
+  readonly Width: System.Single  => generated
+  static-property Max: QuestPDF.Infrastructure.Size { get; }  => generated
+  static-property Zero: QuestPDF.Infrastructure.Size { get; }  => generated
+  ctor (width: System.Single, height: System.Single)  => generated
+  method ToString() -> System.String  => infrastructure
+
+class QuestPDF.Infrastructure.SvgImage implements System.IDisposable [internal-ctor] [doc]  => generated
+  method Dispose() -> System.Void  => generated
+  static-method FromFile(filePath: System.String) -> QuestPDF.Infrastructure.SvgImage [doc]  => generated
+  static-method FromText(svg: System.String) -> QuestPDF.Infrastructure.SvgImage [doc]  => generated
+
+enum QuestPDF.Infrastructure.TextHorizontalAlignment implements System.IComparable, System.IConvertible, System.IFormattable, System.ISpanFormattable  => generated
+  value Left = 0
+  value Center = 1
+  value Right = 2
+  value Justify = 3
+  value Start = 4
+  value End = 5
+
+enum QuestPDF.Infrastructure.TextInjectedElementAlignment implements System.IComparable, System.IConvertible, System.IFormattable, System.ISpanFormattable  => generated
+  value AboveBaseline = 0 [doc]
+  value BelowBaseline = 1 [doc]
+  value Top = 2 [doc]
+  value Bottom = 3 [doc]
+  value Middle = 4 [doc]
+
+class QuestPDF.Infrastructure.TextStyle implements System.IEquatable<QuestPDF.Infrastructure.TextStyle>  => generated
+  static-property Default: QuestPDF.Infrastructure.TextStyle { get; }  => generated
+  ctor ()  => generated
+  method <Clone>$() -> QuestPDF.Infrastructure.TextStyle  => infrastructure
+  method Equals(other: QuestPDF.Infrastructure.TextStyle?) -> System.Boolean  => infrastructure
+  method Equals(obj: System.Object?) -> System.Boolean  => infrastructure
+  method GetHashCode() -> System.Int32  => infrastructure
+  method ToString() -> System.String  => infrastructure
+  operator op_Equality(left: QuestPDF.Infrastructure.TextStyle?, right: QuestPDF.Infrastructure.TextStyle?) -> System.Boolean  => infrastructure
+  operator op_Inequality(left: QuestPDF.Infrastructure.TextStyle?, right: QuestPDF.Infrastructure.TextStyle?) -> System.Boolean  => infrastructure
+
+enum QuestPDF.Infrastructure.Unit implements System.IComparable, System.IConvertible, System.IFormattable, System.ISpanFormattable  => generated
+  value Point = 0 [doc]
+  value Meter = 1
+  value Centimetre = 2
+  value Millimetre = 3
+  value Feet = 4
+  value Inch = 5
+  value Mil = 6 [doc]
+
+enum QuestPDF.Infrastructure.VerticalAlignment implements System.IComparable, System.IConvertible, System.IFormattable, System.ISpanFormattable  => generated
+  value Top = 0
+  value Middle = 1
+  value Bottom = 2
+
+static-class QuestPDF.Previewer.PreviewerExtensions  => generated
+  extension ShowInPreviewer(this document: QuestPDF.Infrastructure.IDocument, port: System.Int32 = 12500) -> System.Void [obsolete]  => generated
+  extension ShowInPreviewerAsync(this document: QuestPDF.Infrastructure.IDocument, port: System.Int32 = 12500, cancellationToken: System.Threading.CancellationToken = default) -> System.Threading.Tasks.Task [obsolete]  => unsupported: asynchronous surface (Task/CancellationToken); the bridge is synchronous and the sync overload is generated
+
+static-class QuestPDF.Settings  => generated
+  static-property CheckIfAllTextGlyphsAreAvailable: System.Boolean { get; set; } = bool:false [doc]  => generated
+  static-property DocumentLayoutExceptionThreshold: System.Int32 { get; set; } = number:250 [obsolete]  => generated
+  static-property EnableCaching: System.Boolean { get; set; } = bool:true [doc]  => generated
+  static-property EnableDebugging: System.Boolean { get; set; } = bool:false [doc]  => generated
+  static-property FontDiscoveryPaths: System.Collections.Generic.ICollection<System.String> { get; } [doc]  => unsupported: collection type System.Collections.Generic.ICollection<System.String> is only bridged in parameter position
+  static-property License: QuestPDF.Infrastructure.LicenseType? { get; set; } [doc]  => generated
+  static-property TemporaryStoragePath: System.String? { get; set; } [doc]  => generated
+  static-property UseEnvironmentFonts: System.Boolean { get; set; } = bool:true [doc]  => generated
+

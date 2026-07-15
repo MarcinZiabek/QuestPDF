@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="QuestPDF.Interop.Generator/QuestPDF.Interop.Generator.csproj" />
+  <Project Path="QuestPDF.Interop.Generator.Tests/QuestPDF.Interop.Generator.Tests.csproj" />
+</Solution>

@@ -1,0 +1,15 @@
+# Members excluded from code generation, implemented by hand in
+# questpdf-kotlin/src/manual/kotlin instead.
+#
+# One XML doc-comment ID per line (the same IDs used in QuestPDF.xml and in
+# coverage-report.md). 'T:' entries exclude a whole type including all of its
+# members. Lines starting with '#' and blank lines are ignored.
+#
+# Note on granularity: Kotlin has no partial classes, so a member of a
+# generated type cannot be re-implemented by hand without leaving the type.
+# Whole types and extension-sourced members are the practical override targets.
+
+# Hand-written with real placeholder data (lorem ipsum, names, dates) so that
+# sample compositions produce realistic values while the rest of the DSL stays
+# a structural stub.
+T:QuestPDF.Helpers.Placeholders

@@ -1,0 +1,24 @@
+{
+    "name": "questpdf",
+    "version": "0.1.0",
+    "private": true,
+    "description": "QuestPDF fluent API for Node.js: generated TypeScript DSL and koffi bindings over the shared QuestPDF.Native (NativeAOT) library.",
+    "license": "MIT",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "engines": {
+        "node": ">=18"
+    },
+    "scripts": {
+        "build": "tsc",
+        "publish-native": "node scripts/publish-native.mjs",
+        "samples": "npm run build && node dist/samples/run-all.js"
+    },
+    "dependencies": {
+        "koffi": "^2.14.1"
+    },
+    "devDependencies": {
+        "@types/node": "^24.0.0",
+        "typescript": "^5.6.0"
+    }
+}
