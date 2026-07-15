@@ -9,7 +9,4 @@
 # generated type cannot be re-implemented by hand without leaving the type.
 # Whole types and extension-sourced members are the practical override targets.
 
-# Hand-written with real placeholder data (lorem ipsum, names, dates) so that
-# sample compositions produce realistic values while the rest of the DSL stays
-# a structural stub.
-T:QuestPDF.Helpers.Placeholders
+# (currently empty — the whole public surface is generated)

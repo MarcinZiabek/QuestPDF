@@ -199,13 +199,29 @@ public sealed partial class PipelineInvariantTests(PipelineFixture pipeline)
     }
 
     [Fact]
+    public void PlaceholdersBindsToTheNativeExports()
+    {
+        var placeholders = pipeline.Files["com/questpdf/helpers/Placeholders.kt"];
+        Assert.Contains("object Placeholders", placeholders);
+        Assert.Contains("NativeBridge.lib.QP_Placeholders_loremIpsum_0()", placeholders);
+        Assert.Contains("fun image(width: Int, height: Int): ByteArray", placeholders);
+
+        // The binding layer declares the entry points and the native side exports them.
+        Assert.Contains("QP_Placeholders_loremIpsum_0", pipeline.Files["com/questpdf/interop/QuestPdfNative.kt"]);
+        Assert.Contains("EntryPoint = \"QP_Placeholders_loremIpsum_0\"", pipeline.NativeFiles["Exports/Placeholders.g.cs"]);
+    }
+
+    [Fact]
     public void ManuallyOverriddenTypesAreNotEmitted()
     {
-        // Placeholders is listed in manual-overrides.txt and hand-written in the
-        // manual/ source set; emitting it too would be a duplicate declaration.
-        Assert.DoesNotContain("com/questpdf/helpers/Placeholders.kt", pipeline.Files.Keys);
+        // A 'T:' override excludes the whole type and reclassifies every member;
+        // the repository file is empty, so exercise the mechanism synthetically.
+        var overrides = new ManualOverrides(["T:QuestPDF.Helpers.Placeholders"]);
+        var run = KotlinBackend.Run(pipeline.Assembly, overrides);
 
-        var entries = pipeline.Model.Report
+        Assert.DoesNotContain("com/questpdf/helpers/Placeholders.kt", run.Output.Files.Keys);
+
+        var entries = run.Model.Report
             .Where(r => r.DocId.Contains("QuestPDF.Helpers.Placeholders"))
             .ToList();
 

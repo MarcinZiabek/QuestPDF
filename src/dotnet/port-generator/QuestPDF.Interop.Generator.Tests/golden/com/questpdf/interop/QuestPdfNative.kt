@@ -708,6 +708,28 @@ internal interface QuestPdfNative : QuestPdfNativeRuntime {
     fun QP_PageSizes_getLetter_0(): Long
     fun QP_PageSizes_getPostcard_0(): Long
     fun QP_PageSizes_getTabloid_0(): Long
+    fun QP_Placeholders_backgroundColor_0(): Long
+    fun QP_Placeholders_color_0(): Long
+    fun QP_Placeholders_dateTime_0(): Pointer?
+    fun QP_Placeholders_decimal_0(): Pointer?
+    fun QP_Placeholders_email_0(): Pointer?
+    fun QP_Placeholders_image_0(size: Long, outData: PointerByReference, outLength: IntByReference)
+    fun QP_Placeholders_image_1(width: Int, height: Int, outData: PointerByReference, outLength: IntByReference)
+    fun QP_Placeholders_integer_0(): Pointer?
+    fun QP_Placeholders_label_0(): Pointer?
+    fun QP_Placeholders_longDate_0(): Pointer?
+    fun QP_Placeholders_loremIpsum_0(): Pointer?
+    fun QP_Placeholders_name_0(): Pointer?
+    fun QP_Placeholders_paragraph_0(): Pointer?
+    fun QP_Placeholders_paragraphs_0(): Pointer?
+    fun QP_Placeholders_percent_0(): Pointer?
+    fun QP_Placeholders_phoneNumber_0(): Pointer?
+    fun QP_Placeholders_price_0(): Pointer?
+    fun QP_Placeholders_question_0(): Pointer?
+    fun QP_Placeholders_sentence_0(): Pointer?
+    fun QP_Placeholders_shortDate_0(): Pointer?
+    fun QP_Placeholders_time_0(): Pointer?
+    fun QP_Placeholders_webpageUrl_0(): Pointer?
     fun QP_BoxShadowStyle_ctor_0(): Long
     fun QP_BoxShadowStyle_getBlur_0(self: Long): Float
     fun QP_BoxShadowStyle_setBlur_0(self: Long, value: Float)
