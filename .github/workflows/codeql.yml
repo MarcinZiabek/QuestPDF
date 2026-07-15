@@ -24,22 +24,60 @@ jobs:
           build-mode: none
         - language: csharp
           build-mode: manual
+        # The JVM and Node clients are largely emitted by the interop generator
+        # (src/dotnet/port-generator); generated sources are never committed, so
+        # they are regenerated before analysis.
+        - language: java-kotlin
+          build-mode: manual
+          # Kotlin 2.4 needs CodeQL >= 2.26.0 (2026-07-10); remove this pin once
+          # the bundle linked to codeql-action catches up.
+          codeql-tools: latest
+        - language: javascript-typescript
+          build-mode: none
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+
+    - name: Setup JDK 21
+      if: matrix.language == 'java-kotlin'
+      uses: actions/setup-java@v4
+      with:
+        distribution: temurin
+        java-version: 21
+
+    - name: Setup .NET SDK
+      if: matrix.language == 'java-kotlin' || matrix.language == 'javascript-typescript'
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 10.0.x
+
+    - name: Generate interop bindings
+      if: matrix.language == 'java-kotlin' || matrix.language == 'javascript-typescript'
+      shell: bash
+      run: dotnet run --project src/dotnet/port-generator/QuestPDF.Interop.Generator
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v4
       with:
         languages: ${{ matrix.language }}
         build-mode: ${{ matrix.build-mode }}
-        
+        tools: ${{ matrix.codeql-tools }}
+
     - name: Run manual build steps
       if: matrix.build-mode == 'manual'
       shell: bash
       run: |
-        dotnet build src/dotnet/library/QuestPDF.slnx --configuration Release
+        case "${{ matrix.language }}" in
+          csharp)
+            dotnet build src/dotnet/library/QuestPDF.slnx --configuration Release
+            ;;
+          java-kotlin)
+            # --no-daemon so the CodeQL tracer can observe the Kotlin compiler.
+            cd src/jvm/package
+            ./gradlew --no-daemon compileKotlin compileSamplesKotlin
+            ;;
+        esac
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v4
