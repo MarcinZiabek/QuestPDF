@@ -7,6 +7,7 @@ import com.sun.jna.ptr.IntByReference
 import com.sun.jna.ptr.PointerByReference
 import java.io.File
 import java.lang.ref.Cleaner
+import java.nio.file.Files
 import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
@@ -33,22 +34,9 @@ object NativeBridge {
     private fun load(): QuestPdfNative {
         System.setProperty("jna.encoding", "UTF-8")
 
-        val directory = System.getProperty("questpdf.native.dir")
-            ?: error(
-                "System property 'questpdf.native.dir' must point at the directory containing the " +
-                    "published QuestPDF.Native shared library. Run './gradlew publishNative' and use " +
-                    "the Gradle run tasks, which set the property automatically."
-            )
-
-        val osName = System.getProperty("os.name").lowercase()
-        val libraryFile = when {
-            osName.contains("mac") -> "QuestPDF.Native.dylib"
-            osName.contains("win") -> "QuestPDF.Native.dll"
-            else -> "QuestPDF.Native.so"
-        }
-
-        val path = File(directory, libraryFile)
-        require(path.exists()) { "Native library not found at $path — run './gradlew publishNative' first." }
+        val directory = resolveNativeDirectory()
+        val path = File(directory, nativeLibraryFileName())
+        require(path.exists()) { "Native library not found at $path." }
 
         val loaded = Native.load(
             path.absolutePath,
@@ -61,10 +49,95 @@ object NativeBridge {
         }
         retained.add(onError)
 
-        val rc = loaded.QuestPdf_Initialize(File(directory).absolutePath, onError)
+        val rc = loaded.QuestPdf_Initialize(directory.absolutePath, onError)
         check(rc == 0) { "QuestPdf_Initialize failed with code $rc" }
 
         return loaded
+    }
+
+    /**
+     * Locates the directory holding the QuestPDF.Native runtime files. An
+     * explicit override (the questpdf.native.dir system property or the
+     * QUESTPDF_NATIVE_DIR environment variable) wins; otherwise the files are
+     * extracted from the natives classifier jar found on the classpath.
+     */
+    private fun resolveNativeDirectory(): File {
+        val override = System.getProperty("questpdf.native.dir") ?: System.getenv("QUESTPDF_NATIVE_DIR")
+
+        if (override != null) {
+            val directory = File(override)
+            require(directory.isDirectory) {
+                "The QuestPDF native directory override points at $directory, which does not exist."
+            }
+            return directory
+        }
+
+        return extractNativesFromClasspath()
+    }
+
+    private fun nativeLibraryFileName(): String {
+        val osName = System.getProperty("os.name").lowercase()
+        return when {
+            osName.contains("mac") -> "QuestPDF.Native.dylib"
+            osName.contains("win") -> "QuestPDF.Native.dll"
+            else -> "QuestPDF.Native.so"
+        }
+    }
+
+    /** The platform identifier used by both the native build and the natives jar layout. */
+    private fun currentRid(): String {
+        val osName = System.getProperty("os.name").lowercase()
+        val archName = System.getProperty("os.arch").lowercase()
+        val arch = if (archName == "aarch64" || archName == "arm64") "arm64" else "x64"
+
+        return when {
+            osName.contains("mac") -> "osx-$arch"
+            osName.contains("win") -> "win-$arch"
+            isMusl() -> "linux-musl-$arch"
+            else -> "linux-$arch"
+        }
+    }
+
+    private fun isMusl(): Boolean =
+        File("/etc/alpine-release").exists() ||
+            File("/lib").listFiles().orEmpty().any { it.name.startsWith("ld-musl-") }
+
+    /**
+     * Extracts the runtime files listed in the natives jar's index into a
+     * fresh temporary directory. Streams are read through the classloader, so
+     * the mechanism works from plain classpath jars as well as repackaged
+     * fat/nested jars (Spring Boot and friends).
+     */
+    private fun extractNativesFromClasspath(): File {
+        val rid = currentRid()
+        val resourceRoot = "questpdf/native/$rid"
+        val loader = Thread.currentThread().contextClassLoader ?: NativeBridge::class.java.classLoader
+
+        val entries = loader.getResourceAsStream("$resourceRoot/index.txt")?.use { stream ->
+            stream.bufferedReader().readLines().map(String::trim).filter { it.isNotEmpty() }
+        } ?: error(
+            "QuestPDF native libraries for $rid were not found on the classpath. Add the natives " +
+                "artifact for your platform (com.questpdf:questpdf with the '$rid' classifier), or point " +
+                "the questpdf.native.dir system property / QUESTPDF_NATIVE_DIR environment variable at a " +
+                "directory containing the published QuestPDF.Native runtime files."
+        )
+
+        val target = Files.createTempDirectory("questpdf-native-").toFile()
+        Runtime.getRuntime().addShutdownHook(Thread { target.deleteRecursively() })
+
+        for (entry in entries) {
+            require(!entry.contains("..")) { "Invalid natives index entry: $entry" }
+
+            val destination = File(target, entry)
+            destination.parentFile.mkdirs()
+
+            val stream = loader.getResourceAsStream("$resourceRoot/$entry")
+                ?: error("The natives index lists $entry, but resource $resourceRoot/$entry is missing.")
+
+            stream.use { input -> destination.outputStream().use { input.copyTo(it) } }
+        }
+
+        return target
     }
 
     /** Rethrows any error recorded while the last native call was running. */

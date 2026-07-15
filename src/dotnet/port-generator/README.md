@@ -34,6 +34,7 @@ all sharing one native library and ABI (see *Architecture* below).
 | `src/jvm/package/` | Gradle Kotlin/JVM project: `src/generated/kotlin` (wiped each run, not committed), `src/manual/kotlin` (interop runtime + handwritten overrides), `src/samples/kotlin` |
 | `src/node/package/` | npm TypeScript project: `src/generated` (wiped each run, not committed), `src/manual` (interop runtime + handwritten overrides), `src/samples` |
 | `src/<client>/package/manual-overrides.txt` | Doc-comment IDs excluded from generation for hand-written implementation (per-backend file) |
+| `src/jvm/package-tests/`, `src/node/package-tests/` | Package tests mirroring `src/dotnet/package-tests`: consumer apps (console, fat-jar/TypeScript/ESM, web app) installing the published package with per-platform natives from a local feed; driven by `run-tests.mjs`, on CI by `jvm-package-tests.yml` / `node-package-tests.yml` |
 | `src/<client>/package/coverage-report.md` | Classification of every public member for that client; regenerated on every run (not committed) |
 
 Generated code is not committed: `Exports/`, both `src/generated` trees, and
@@ -65,6 +66,13 @@ cd src/jvm/package && ./gradlew build runSamples
 
 # Full dev loop (generate + build + samples)
 ./src/dotnet/port-generator/run.sh
+
+# Package tests: publish the package into a local feed (artifacts/maven-feed
+# or artifacts/npm-feed), install it into real consumer apps (console,
+# fat-jar/TypeScript/ESM, web app), run them, and validate the produced
+# PDF/qpdf/XPS documents. CI: jvm-package-tests.yml / node-package-tests.yml.
+zx src/jvm/package-tests/run-tests.mjs
+zx src/node/package-tests/run-tests.mjs
 ```
 
 Gradle needs JDK 21 (`JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home`).

@@ -1,0 +1,13 @@
+{
+    "name": "questpdf-packagetest-console-typescript",
+    "version": "1.0.0",
+    "private": true,
+    "description": "TypeScript console app consuming the questpdf package (and its shipped type declarations) from the local feed.",
+    "scripts": {
+        "build": "tsc"
+    },
+    "devDependencies": {
+        "@types/node": "^24.0.0",
+        "typescript": "^5.6.0"
+    }
+}

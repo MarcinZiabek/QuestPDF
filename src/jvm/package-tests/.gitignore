@@ -1,0 +1,9 @@
+# Build outputs of the package-test apps
+build/
+target/
+.gradle/
+.kotlin/
+dependency-reduced-pom.xml
+
+# Documents produced by test runs
+TestOutput/

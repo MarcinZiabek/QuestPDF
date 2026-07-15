@@ -45,12 +45,43 @@ const retained: koffi.IKoffiRegisteredCallback[] = [];
 // holds its function pointer for the whole process lifetime.
 let errorCallbackRegistration: koffi.IKoffiRegisteredCallback | null = null;
 
+/** The platform identifier used in @questpdf/native-* package names. */
+function platformPackageId(): string {
+    const arch = process.arch === 'arm64' ? 'arm64' : 'x64';
+
+    if (process.platform === 'darwin')
+        return `darwin-${arch}`;
+
+    if (process.platform === 'win32')
+        return `win32-${arch}`;
+
+    return isMusl() ? `linux-musl-${arch}` : `linux-${arch}`;
+}
+
+/** glibc-based distributions report their glibc version in the process report; musl-based ones (Alpine) do not. */
+function isMusl(): boolean {
+    try {
+        const report = process.report?.getReport() as { header?: { glibcVersionRuntime?: string } } | undefined;
+        return report?.header?.glibcVersionRuntime === undefined;
+    } catch {
+        return false;
+    }
+}
+
 function libraryDirectory(): string {
     const override = process.env.QUESTPDF_NATIVE_DIR;
     if (override !== undefined && override.length > 0)
         return path.resolve(override);
 
-    // dist/manual/native-bridge.js → <package root>/native
+    // The installed platform package (@questpdf/native-*, an optional dependency of questpdf).
+    try {
+        const manifest = require.resolve(`@questpdf/native-${platformPackageId()}/package.json`);
+        return path.join(path.dirname(manifest), 'native');
+    } catch {
+        // Fall through to the development layout.
+    }
+
+    // dist/manual/native-bridge.js → <package root>/native (development layout, npm run publish-native)
     return path.resolve(__dirname, '..', '..', 'native');
 }
 
@@ -67,8 +98,9 @@ function initialize(): BridgeState {
     const libraryPath = path.join(directory, libraryFileName());
     if (!existsSync(libraryPath)) {
         throw new Error(
-            `Native library not found at ${libraryPath} — run 'npm run publish-native' first, ` +
-            `or point QUESTPDF_NATIVE_DIR at the publish directory.`);
+            `Native library not found at ${libraryPath} — install the @questpdf/native-${platformPackageId()} ` +
+            `package, point QUESTPDF_NATIVE_DIR at a published runtime directory, or run 'npm run publish-native' ` +
+            `when working inside the repository.`);
     }
 
     const lib = koffi.load(libraryPath);

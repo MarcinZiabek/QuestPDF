@@ -1,9 +1,12 @@
 plugins {
     kotlin("jvm") version "2.4.0"
+    `maven-publish`
 }
 
 group = "com.questpdf"
-version = "0.1.0-SNAPSHOT"
+// Package tests publish unique versions (e.g. 0.1.0-local.20260715120000) so
+// stale caches can never satisfy a dependency on a freshly built package.
+version = providers.gradleProperty("questpdfVersion").getOrElse("0.1.0-SNAPSHOT")
 
 repositories {
     mavenCentral()
@@ -11,6 +14,10 @@ repositories {
 
 kotlin {
     jvmToolchain(21)
+}
+
+java {
+    withSourcesJar()
 }
 
 dependencies {
@@ -34,10 +41,17 @@ sourceSets {
 
 // ---- native library (dotnet publish, NativeAOT) ----
 
-val nativeProjectDir = rootDir.resolve("../../dotnet/interop")
-val nativePublishDir = layout.buildDirectory.dir("native")
+// Every platform's publish output is staged under <nativesRoot>/<rid>/ before
+// packaging. Locally, publishNative fills in the current platform's slot; on
+// CI, prebuilt outputs for the whole platform matrix are downloaded there.
+val knownRids = listOf("win-x64", "win-arm64", "linux-x64", "linux-arm64", "linux-musl-x64", "osx-x64", "osx-arm64")
 
-val dotnetRid = providers.systemProperty("os.name").map { osName ->
+val nativeProjectDir = rootDir.resolve("../../dotnet/interop")
+val nativesRoot = providers.gradleProperty("questpdfNativesDir")
+    .map { rootDir.resolve(it) }
+    .getOrElse(layout.buildDirectory.dir("native-staging").get().asFile)
+
+val currentRid = providers.systemProperty("os.name").map { osName ->
     val arch = System.getProperty("os.arch").lowercase()
     val archPart = if (arch == "aarch64" || arch == "arm64") "arm64" else "x64"
     when {
@@ -45,7 +59,7 @@ val dotnetRid = providers.systemProperty("os.name").map { osName ->
         osName.lowercase().contains("win") -> "win-$archPart"
         else -> "linux-$archPart"
     }
-}
+}.get()
 
 // The Gradle daemon's PATH may not include the dotnet install location.
 val dotnetExecutable = sequenceOf(
@@ -57,10 +71,9 @@ val dotnetExecutable = sequenceOf(
 
 val publishNative = tasks.register<Exec>("publishNative") {
     group = "build"
-    description = "Publishes the QuestPDF.Native shared library (dotnet publish, NativeAOT)."
+    description = "Publishes the QuestPDF.Native shared library for the current platform (dotnet publish, NativeAOT)."
 
-    val rid = dotnetRid.get()
-    val outputDir = nativePublishDir.get().asFile
+    val outputDir = nativesRoot.resolve(currentRid)
 
     inputs.dir(nativeProjectDir.resolve("Exports"))
     inputs.file(nativeProjectDir.resolve("InteropRuntime.cs"))
@@ -69,7 +82,7 @@ val publishNative = tasks.register<Exec>("publishNative") {
 
     commandLine(
         dotnetExecutable, "publish", nativeProjectDir.absolutePath,
-        "-c", "Release", "-r", rid,
+        "-c", "Release", "-r", currentRid,
         "-o", outputDir.absolutePath,
     )
 
@@ -80,7 +93,117 @@ val publishNative = tasks.register<Exec>("publishNative") {
     }
 }
 
-val nativeDirProperty = nativePublishDir.map { it.asFile.absolutePath }
+fun nativeLibraryFileName(rid: String) = when {
+    rid.startsWith("osx-") -> "QuestPDF.Native.dylib"
+    rid.startsWith("win-") -> "QuestPDF.Native.dll"
+    else -> "QuestPDF.Native.so"
+}
+
+// ---- natives jars (one classifier jar per staged platform) ----
+
+// With an explicit -PquestpdfNativesDir (CI), the staging directory is filled
+// externally (downloaded platform-matrix artifacts) and packaged as found at
+// configuration time. Without it (the local flow), the current platform's
+// slot is always packaged and produced by publishNative in the same build.
+val externallyStaged = providers.gradleProperty("questpdfNativesDir").isPresent
+val scannedRids = knownRids.filter { nativesRoot.resolve(it).resolve(nativeLibraryFileName(it)).isFile }
+val packagedRids = if (externallyStaged) scannedRids else (scannedRids + currentRid).distinct()
+
+val nativesJarTasks = packagedRids.map { rid ->
+    val autoBuild = !externallyStaged && rid == currentRid
+    val stagedDir = nativesRoot.resolve(rid)
+    val resourceRoot = "questpdf/native/$rid"
+    val indexDir = layout.buildDirectory.dir("native-index/$rid")
+
+    // The loader cannot enumerate classpath directories portably (plain jars,
+    // Spring Boot nested jars, ...), so each natives jar carries an index of
+    // every file to extract.
+    val indexTask = tasks.register("generateNativesIndex-$rid") {
+        if (autoBuild)
+            dependsOn(publishNative)
+
+        inputs.dir(stagedDir)
+        outputs.dir(indexDir)
+
+        doLast {
+            val indexFile = indexDir.get().asFile.resolve("$resourceRoot/index.txt")
+            indexFile.parentFile.mkdirs()
+
+            val entries = stagedDir.walkTopDown()
+                .filter { it.isFile }
+                .map { it.relativeTo(stagedDir).invariantSeparatorsPath }
+                .sorted()
+                .toList()
+
+            check(entries.isNotEmpty()) { "No native files found in $stagedDir." }
+            indexFile.writeText(entries.joinToString("\n", postfix = "\n"))
+        }
+    }
+
+    tasks.register<Jar>("nativesJar-$rid") {
+        group = "build"
+        description = "Packages the QuestPDF.Native runtime directory for $rid as a classifier jar."
+        dependsOn(indexTask)
+        if (autoBuild)
+            dependsOn(publishNative)
+
+        archiveClassifier.set(rid)
+        from(stagedDir) { into(resourceRoot) }
+        from(indexDir)
+        exclude("**/*.dSYM/**")
+    }
+}
+
+// ---- publishing ----
+
+val repoRoot = rootDir.resolve("../../..")
+val feedDir = providers.gradleProperty("questpdfFeedDir")
+    .map { rootDir.resolve(it) }
+    .getOrElse(repoRoot.resolve("artifacts/maven-feed"))
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            artifactId = "questpdf"
+            from(components["java"])
+            nativesJarTasks.forEach { artifact(it) }
+
+            pom {
+                name.set("QuestPDF for JVM")
+                description.set("QuestPDF fluent document-generation API for the JVM, backed by the native QuestPDF engine.")
+                url.set("https://www.questpdf.com")
+                licenses {
+                    license {
+                        name.set("MIT")
+                        url.set("https://opensource.org/licenses/MIT")
+                    }
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            name = "localFeed"
+            url = uri(feedDir)
+        }
+    }
+}
+
+// Classifier artifacts are not representable in Gradle module metadata; with
+// the metadata disabled, Maven and Gradle consumers both resolve through the
+// POM and fetch natives jars by the plain Maven classifier convention.
+tasks.withType<GenerateModuleMetadata>().configureEach {
+    enabled = false
+}
+
+tasks.register("publishToLocalFeed") {
+    group = "publishing"
+    description = "Publishes the package (main + staged natives jars) to the local Maven feed directory."
+    dependsOn("publishMavenPublicationToLocalFeedRepository")
+}
+
+// ---- samples ----
 
 tasks.register<JavaExec>("runSamples") {
     group = "verification"
@@ -88,7 +211,7 @@ tasks.register<JavaExec>("runSamples") {
     dependsOn(publishNative)
     classpath = sourceSets["samples"].runtimeClasspath
     mainClass.set("samples.RunAllKt")
-    systemProperty("questpdf.native.dir", nativeDirProperty.get())
+    systemProperty("questpdf.native.dir", nativesRoot.resolve(currentRid).absolutePath)
     systemProperty("questpdf.samples.output", layout.buildDirectory.dir("samples-output").get().asFile.absolutePath)
 }
 

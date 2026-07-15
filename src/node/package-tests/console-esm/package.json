@@ -1,0 +1,7 @@
+{
+    "name": "questpdf-packagetest-console-esm",
+    "version": "1.0.0",
+    "private": true,
+    "type": "module",
+    "description": "ES modules console app consuming the questpdf package from the local feed."
+}

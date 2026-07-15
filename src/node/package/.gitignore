@@ -7,8 +7,12 @@
 /node_modules/
 /dist/
 
-# Published QuestPDF.Native runtime directory (npm run publish-native)
+# Published QuestPDF.Native runtime directories (npm run publish-native)
 /native/
+/native-staging/
+
+# Native package assembly area (scripts/pack-feed.mjs)
+/build/
 
 # JetBrains IDEs (WebStorm / IntelliJ IDEA)
 /.idea/

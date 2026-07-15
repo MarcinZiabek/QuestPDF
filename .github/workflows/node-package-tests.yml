@@ -1,0 +1,234 @@
+name: Node Package Tests
+
+permissions:
+  actions: write
+  contents: read
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/node-package-tests.yml'
+      - 'src/dotnet/interop/**'
+      - 'src/dotnet/port-generator/**'
+      - 'src/node/**'
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/node-package-tests.yml'
+      - 'src/dotnet/interop/**'
+      - 'src/dotnet/port-generator/**'
+      - 'src/node/**'
+  workflow_dispatch:
+
+env:
+  DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: 1
+
+jobs:
+  # Stage 1: build the QuestPDF.Native shared library (NativeAOT) for every
+  # supported platform. NativeAOT cannot cross-compile, so each platform builds
+  # on its own runner. Linux glibc builds run in ubuntu:22.04 containers so the
+  # produced binaries stay compatible with older glibc versions; the musl
+  # build runs in an Alpine container.
+  native:
+    name: Native ${{ matrix.platform.rid }}
+    runs-on: ${{ matrix.platform.runs-on }}
+    container: ${{ matrix.platform.container }}
+    timeout-minutes: 30
+
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - { rid: win-x64, runs-on: windows-latest }
+          - { rid: win-arm64, runs-on: windows-11-arm }
+          - { rid: linux-x64, runs-on: ubuntu-latest, container: 'ubuntu:22.04' }
+          - { rid: linux-arm64, runs-on: ubuntu-24.04-arm, container: 'ubuntu:22.04' }
+          - { rid: linux-musl-x64, runs-on: ubuntu-latest, container: 'alpine:3.22' }
+          - { rid: osx-x64, runs-on: macos-26-intel }
+          - { rid: osx-arm64, runs-on: macos-latest }
+
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Install Ubuntu prerequisites
+        if: startsWith(matrix.platform.container, 'ubuntu')
+        shell: bash
+        run: |
+          apt update --yes
+          apt install --yes curl ca-certificates clang zlib1g-dev tar gzip
+
+      - name: Install Alpine prerequisites
+        if: startsWith(matrix.platform.container, 'alpine')
+        shell: sh
+        run: |
+          apk update
+          apk add bash curl ca-certificates clang build-base zlib-dev tar gzip
+
+      - name: Setup .NET SDK (container)
+        if: matrix.platform.container != ''
+        shell: bash
+        run: |
+          curl -sSL https://dot.net/v1/dotnet-install.sh -o /tmp/dotnet-install.sh
+          bash /tmp/dotnet-install.sh --channel 10.0 --install-dir "$HOME/.dotnet"
+          echo "$HOME/.dotnet" >> "$GITHUB_PATH"
+          echo "DOTNET_ROOT=$HOME/.dotnet" >> "$GITHUB_ENV"
+
+      - name: Setup .NET SDK
+        if: matrix.platform.container == ''
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Generate interop sources
+        run: dotnet run --project src/dotnet/port-generator/QuestPDF.Interop.Generator
+
+      - name: Publish QuestPDF.Native
+        shell: bash
+        run: |
+          dotnet publish src/dotnet/interop -c Release -r "${{ matrix.platform.rid }}" -o "artifacts/native-staging/${{ matrix.platform.rid }}"
+          rm -rf artifacts/native-staging/${{ matrix.platform.rid }}/*.dSYM
+
+      - name: Upload native library
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-${{ matrix.platform.rid }}
+          path: artifacts/native-staging/${{ matrix.platform.rid }}
+
+  # Stage 2: pack the npm package (questpdf + one @questpdf/native-* package
+  # per platform) into a local feed of .tgz archives and share it with the
+  # test jobs.
+  pack:
+    name: Pack questpdf (npm feed)
+    needs: native
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    outputs:
+      package-version: ${{ steps.version.outputs.package-version }}
+
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Create package version
+        id: version
+        run: echo "package-version=0.1.0-ci.${GITHUB_RUN_ID}.${GITHUB_RUN_ATTEMPT}" >> "$GITHUB_OUTPUT"
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Generate interop sources
+        run: dotnet run --project src/dotnet/port-generator/QuestPDF.Interop.Generator
+
+      - name: Download native libraries
+        uses: actions/download-artifact@v4
+        with:
+          pattern: native-*
+          path: artifacts/native-staging
+
+      - name: Normalize native staging layout
+        run: |
+          cd artifacts/native-staging
+          for directory in native-*; do mv "$directory" "${directory#native-}"; done
+          ls -R .
+
+      - name: Pack packages into local feed
+        working-directory: src/node/package
+        run: |
+          npm ci
+          node scripts/pack-feed.mjs \
+            --version "${{ steps.version.outputs.package-version }}" \
+            --natives-dir "$GITHUB_WORKSPACE/artifacts/native-staging" \
+            --feed-dir "$GITHUB_WORKSPACE/artifacts/npm-feed" \
+            --require-all
+
+      - name: Upload package feed
+        uses: actions/upload-artifact@v4
+        with:
+          name: npm-feed
+          path: artifacts/npm-feed
+
+  # Stage 3: consume the package from the local feed on every supported
+  # platform: CommonJS, ES modules and TypeScript console apps, plus an
+  # Express web app.
+  test:
+    name: Test ${{ matrix.platform.rid }}
+    needs: pack
+    runs-on: ${{ matrix.platform.runs-on }}
+    container: ${{ matrix.platform.container }}
+    timeout-minutes: 30
+
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - { rid: win-x64, runs-on: windows-latest }
+          - { rid: win-arm64, runs-on: windows-11-arm }
+          - { rid: linux-x64, runs-on: ubuntu-latest, container: 'ubuntu:24.04' }
+          - { rid: linux-arm64, runs-on: ubuntu-24.04-arm, container: 'ubuntu:24.04' }
+          - { rid: linux-musl-x64, runs-on: ubuntu-latest, container: 'alpine:3.22' }
+          - { rid: osx-x64, runs-on: macos-26-intel }
+          - { rid: osx-arm64, runs-on: macos-latest }
+
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Install Ubuntu prerequisites
+        if: startsWith(matrix.platform.container, 'ubuntu')
+        shell: bash
+        run: |
+          apt update --yes
+          apt install --yes curl ca-certificates nodejs npm
+
+      - name: Install Alpine prerequisites
+        if: startsWith(matrix.platform.container, 'alpine')
+        shell: sh
+        run: |
+          apk update
+          apk add bash curl ca-certificates nodejs npm libstdc++ libgcc
+
+      - name: Install zx
+        shell: bash
+        run: npm install --global zx@8
+
+      - name: Download package feed
+        uses: actions/download-artifact@v4
+        with:
+          name: npm-feed
+          path: artifacts/npm-feed
+
+      - name: Run package tests
+        shell: bash
+        run: zx src/node/package-tests/run-tests.mjs --version "${{ needs.pack.outputs.package-version }}"
+
+      - name: Upload test output
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: out-node-${{ matrix.platform.rid }}
+          path: artifacts/test-output/**
+
+  merge-output-artifacts:
+    name: Merge test output artifacts
+    needs: test
+    runs-on: ubuntu-latest
+    if: always()
+    timeout-minutes: 10
+
+    steps:
+      - name: Merge test output artifacts
+        uses: actions/upload-artifact/merge@v4
+        with:
+          name: questpdf-node-package-tests-output
+          pattern: out-node-*
+          separate-directories: true
+          delete-merged: true
