@@ -1,15 +1,17 @@
 # Porting documentation examples across runtimes
 
 The .NET documentation examples (`src/dotnet/library/QuestPDF.DocumentationExamples`)
-are ported to Kotlin (`src/jvm/package/src/doc-examples/kotlin/questpdf/docexamples`)
-and TypeScript (`src/node/package/src/doc-examples`). All three suites drive the same
-native QuestPDF engine, so for a correct port every produced image is **byte-identical**
-across runtimes — that identity is what the port-parity tests verify.
+are ported to Kotlin (`src/jvm/package/src/doc-examples/kotlin/questpdf/docexamples`),
+Java (`src/jvm/package/src/doc-examples/java/questpdf/docexamples`) and TypeScript
+(`src/node/package/src/doc-examples`). All suites drive the same native QuestPDF
+engine, so for a correct port every produced image is **byte-identical** across
+runtimes — that identity is what the port-parity tests verify.
 
 Reference ports (read them before porting anything):
 
 - C# original: `src/dotnet/library/QuestPDF.DocumentationExamples/BorderExamples.cs`
 - Kotlin port: `src/jvm/package/src/doc-examples/kotlin/questpdf/docexamples/BorderExamples.kt`
+- Java port: `src/jvm/package/src/doc-examples/java/questpdf/docexamples/BorderExamples.java`
 - TypeScript port: `src/node/package/src/doc-examples/border-examples.test.ts`
 
 ## Ground rules
@@ -70,6 +72,51 @@ Kotlin needs precise imports): `Colors`, `Fonts`, `PageSize`, `PageSizes`,
 `ImageGenerationSettings`, `ImageCompressionQuality`, `TextStyle`, `LicenseType`
 and friends live in `com.questpdf.infrastructure`; descriptors in `com.questpdf.fluent`.
 
+## Java specifics
+
+The Java suite ports the *Kotlin* files one-to-one (same package, same class and
+test-method names, JUnit 5, `extends DocExample`); consult the C# original whenever
+the Kotlin port looks ambiguous. Java-flavoured mapping on top of the table above:
+
+| Kotlin | Java |
+| --- | --- |
+| `Document.create { ... }` | `Document.create(document -> { ... })` |
+| `page { continuousSize(450f) }` | `document.page(page -> { page.continuousSize(450f); })` |
+| `.text { span("a") }` | `.text(text -> { text.span("a"); })` |
+| `defaultTextStyle { fontSize(20f) }` | `defaultTextStyle(style -> style.fontSize(20f))` (returns the style) |
+| `Colors.White`, `Colors.Blue.Darken4` | `Colors.getWhite()`, `Colors.Blue.getDarken4()` |
+| `PageSize(0f, 0f)` | `new PageSize(0f, 0f)` |
+| `arrayOf(a, b)` (vararg/array argument) | `new Color[] { a, b }` (or plain varargs) |
+| `ImageGenerationSettings().apply { imageFormat = x }` | local `var settings = new ImageGenerationSettings(); settings.setImageFormat(x);` declared *before* the `Document.create(...)` chain |
+| `{ output("name.webp") }` | `index -> output("name.webp")` |
+| `color.toHexString()` | `color.toString()` (Color/Size/TextStyle bridge .NET `ToString()`) |
+| `Placeholders.lorem()` etc. | `Placeholders.lorem()` (object members are `@JvmStatic`) |
+| `cell().column(1u).rowSpan(24u)` | `cell().column(1).rowSpan(24)` (unsigned params have `Int` twins) |
+| Kotlin extension function workaround | `private static` helper method taking the container |
+| `object : IComponent { ... }` / class | (anonymous) class implementing `com.questpdf.infrastructure.IComponent` |
+
+Handler lambdas (`page(...)`, `column(...)`, `row(...)`, `text(...)`, ...) have
+`java.util.function.Consumer` overloads — never return `Unit.INSTANCE`. Functions
+whose Kotlin form has default parameter values have reduced Java overloads
+(`margin(25f)`, `placeholder()`, `relativeItem()`), so defaults are never spelled
+out. `com.questpdf.infrastructure.Unit` is only needed for non-point units.
+
+Caveats learned porting the suite:
+
+- On subclassed descriptors (e.g. `TextPageNumberDescriptor`), calling a *reduced*
+  overload declared on the base class returns the base type — reorder the chain
+  (subclass-specific calls first) instead of restating default arguments.
+- An *expression-bodied* lambda whose body is a method call
+  (`element(c -> helper(c))`, `text(t -> t.currentPageNumber())`) is ambiguous to
+  javac between the `Consumer` overload and Kotlin's `Function1` overload; use a
+  *block* body (`element(c -> { helper(c); })`) — it is void-compatible only and
+  resolves to the Consumer overload.
+- Java lambdas cannot capture mutating `for` counters — hoist a per-iteration
+  copy (`var index = i;`).
+- A Java file's public class must match its file name, so the preserved C# typo
+  `CodePatternExtesionMethodExample` keeps the *class* name but the Java *file*
+  is spelled `CodePatternExtensionMethodExample.java`.
+
 ## Non-deterministic examples
 
 Examples using `Placeholders` random content or the current date/time cannot be
@@ -82,6 +129,7 @@ checks that the files exist, so no special marking is needed.
 
 - Kotlin compiles: `cd src/jvm/package && ./gradlew compileDocExamplesKotlin`
   (concurrent invocations wait on Gradle's project lock — retry on lock timeouts).
+- Java compiles: `cd src/jvm/package && ./gradlew compileDocExamplesJavaJava`.
 - TypeScript compiles: `cd src/node/package && npx tsc --noEmit`.
-- Full parity: `zx src/port-parity-tests/run-tests.mjs` (runs all three suites and
+- Full parity: `zx src/port-parity-tests/run-tests.mjs` (runs every suite and
   compares every produced file).

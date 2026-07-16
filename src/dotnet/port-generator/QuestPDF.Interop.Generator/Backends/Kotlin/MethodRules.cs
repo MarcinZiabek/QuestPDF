@@ -142,8 +142,10 @@ public sealed class CompilerArtifactRule : IMethodRule
 }
 
 /// <summary>
-/// Object/equality plumbing (ToString, Equals, GetHashCode, ==, !=) is covered
-/// by Kotlin's Any and operator conventions; it is not part of the DSL surface.
+/// Equality plumbing (Equals, GetHashCode, ==, !=) is covered by Kotlin's Any
+/// and operator conventions; it is not part of the DSL surface. Declared
+/// ToString overrides are NOT filtered: they carry real formatting semantics
+/// (Color renders as "#RRGGBB") and bridge as kotlin.Any.toString overrides.
 /// </summary>
 public sealed class EqualityInfrastructureRule : IMethodRule
 {
@@ -154,7 +156,6 @@ public sealed class EqualityInfrastructureRule : IMethodRule
         var m = context.Method;
         return m.Name switch
         {
-            "ToString" when m.Parameters.Count == 0 => true,
             "GetHashCode" when m.Parameters.Count == 0 => true,
             "Equals" when m.Parameters.Count == 1 => true,
             "GetType" when m.Parameters.Count == 0 => true,

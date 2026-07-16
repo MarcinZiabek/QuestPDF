@@ -87,7 +87,8 @@ public sealed record KotlinSecondaryConstructor(
     NativeExport Export,
     string? KDoc,
     string? DeprecationMessage,
-    string SourceDocId);
+    string SourceDocId,
+    bool IsJvmOverloads = false);
 
 public sealed record KotlinFunction
 {
@@ -100,6 +101,10 @@ public sealed record KotlinFunction
     public bool IsAbstract { get; init; }
     public bool IsOpen { get; init; }
     public bool IsOverride { get; init; }
+    /// <summary>Render @JvmStatic (object/companion members, for Java callers).</summary>
+    public bool IsJvmStatic { get; init; }
+    /// <summary>Render @JvmOverloads (defaulted parameters, for Java callers).</summary>
+    public bool IsJvmOverloads { get; init; }
     public string? KDoc { get; init; }
     public string? DeprecationMessage { get; init; }
     public required string SourceDocId { get; init; }
@@ -113,6 +118,28 @@ public abstract record KotlinBody
 
     /// <summary>Marshal arguments, call the native export, check errors, wrap the result.</summary>
     public sealed record Bridge(NativeExport Export) : KotlinBody;
+
+    /// <summary>
+    /// Calls a sibling overload (Java-friendliness synthesis): supplies the
+    /// default values of dropped parameters and adapts SAM handlers.
+    /// </summary>
+    public sealed record Delegate(string TargetName, IReadOnlyList<KDelegateArg> Arguments) : KotlinBody;
+}
+
+/// <summary>One argument a synthesized delegating overload passes to its target.</summary>
+public abstract record KDelegateArg
+{
+    /// <summary>Forwards the overload's own parameter (spread when vararg).</summary>
+    public sealed record Ref(string Name, bool Spread) : KDelegateArg;
+
+    /// <summary>Supplies the default value of a parameter the overload dropped.</summary>
+    public sealed record Default(KExpr Value) : KDelegateArg;
+
+    /// <summary>Adapts a java.util.function.Consumer parameter to a receiver lambda: <c>{ name.accept(this) }</c>.</summary>
+    public sealed record ConsumerAccept(string Name) : KDelegateArg;
+
+    /// <summary>Forwards a parameter through a conversion call: <c>name.toUInt()</c>.</summary>
+    public sealed record Converted(string Name, string Conversion) : KDelegateArg;
 }
 
 public sealed record KotlinTypeConstraint(string TypeParameter, KType Bound);
@@ -128,6 +155,9 @@ public sealed record KotlinProperty
     public required string Name { get; init; }
     public required KType Type { get; init; }
     public required bool IsMutable { get; init; }
+
+    /// <summary>Render @JvmStatic (object/companion members, for Java callers).</summary>
+    public bool IsJvmStatic { get; init; }
 
     /// <summary>Client-side literal initializer (compile-time constants).</summary>
     public KExpr? Initializer { get; init; }

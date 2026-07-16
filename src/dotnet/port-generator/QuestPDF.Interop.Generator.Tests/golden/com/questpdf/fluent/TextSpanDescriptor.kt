@@ -203,6 +203,7 @@ open class TextSpanDescriptor internal constructor(handle: Long) : NativeObject(
         TextSpanDescriptor(NativeBridge.checked(NativeBridge.lib.QP_TextSpanDescriptor_fallback_1(nativeHandle, NativeBridge.retain(NativeCallbackJToJ { p0 -> NativeBridge.guard(0L) { (handler(TextStyle(p0))).nativeHandle } }))))
 
     @Deprecated("This setting is not supported since the 2024.3 version. Please use the FontFamilyFallback method or rely on the new automated fallback mechanism.")
+    @JvmOverloads
     open fun fallback(value: TextStyle? = null): TextSpanDescriptor =
         TextSpanDescriptor(NativeBridge.checked(NativeBridge.lib.QP_TextSpanDescriptor_fallback_0(nativeHandle, (value?.nativeHandle ?: 0L))))
 
@@ -246,6 +247,7 @@ open class TextSpanDescriptor internal constructor(handle: Long) : NativeObject(
      * Renders text with an italic effect, where letters are slightly slanted to the right.
      * Commonly used for emphasis or to distinguish specific words.
      */
+    @JvmOverloads
     open fun italic(value: Boolean = true): TextSpanDescriptor =
         TextSpanDescriptor(NativeBridge.checked(NativeBridge.lib.QP_TextSpanDescriptor_italic_0(nativeHandle, (if (value) 1 else 0))))
 
@@ -256,6 +258,7 @@ open class TextSpanDescriptor internal constructor(handle: Long) : NativeObject(
      *
      * @param factor Sets the proportion by which the horizontal space between characters is changed.  A value of 0 maintains the original spacing. When the value is positive, the text is more spread out. When it is negative, the text is more condensed.
      */
+    @JvmOverloads
     open fun letterSpacing(factor: Float = 0f): TextSpanDescriptor =
         TextSpanDescriptor(NativeBridge.checked(NativeBridge.lib.QP_TextSpanDescriptor_letterSpacing_0(nativeHandle, factor)))
 
@@ -318,6 +321,7 @@ open class TextSpanDescriptor internal constructor(handle: Long) : NativeObject(
      *
      * You can control the decoration visuals by setting color and style (solid, double, wavy, dotted, dashed) of the line.
      */
+    @JvmOverloads
     open fun overline(value: Boolean = true): TextSpanDescriptor =
         TextSpanDescriptor(NativeBridge.checked(NativeBridge.lib.QP_TextSpanDescriptor_overline_0(nativeHandle, (if (value) 1 else 0))))
 
@@ -338,6 +342,7 @@ open class TextSpanDescriptor internal constructor(handle: Long) : NativeObject(
      *
      * You can control the decoration visuals by setting color and style (solid, double, wavy, dotted, dashed) of the line.
      */
+    @JvmOverloads
     open fun strikethrough(value: Boolean = true): TextSpanDescriptor =
         TextSpanDescriptor(NativeBridge.checked(NativeBridge.lib.QP_TextSpanDescriptor_strikethrough_0(nativeHandle, (if (value) 1 else 0))))
 
@@ -381,6 +386,7 @@ open class TextSpanDescriptor internal constructor(handle: Long) : NativeObject(
      *
      * You can control the decoration visuals by setting color and style (solid, double, wavy, dotted, dashed) of the line.
      */
+    @JvmOverloads
     open fun underline(value: Boolean = true): TextSpanDescriptor =
         TextSpanDescriptor(NativeBridge.checked(NativeBridge.lib.QP_TextSpanDescriptor_underline_0(nativeHandle, (if (value) 1 else 0))))
 
@@ -390,6 +396,7 @@ open class TextSpanDescriptor internal constructor(handle: Long) : NativeObject(
      *
      * @param factor Sets the proportion by which the horizontal space between words is changed.  A value of 0 maintains the original spacing. When the value is positive, the text is more spread out. When it is negative, the text is more condensed.
      */
+    @JvmOverloads
     open fun wordSpacing(factor: Float = 0f): TextSpanDescriptor =
         TextSpanDescriptor(NativeBridge.checked(NativeBridge.lib.QP_TextSpanDescriptor_wordSpacing_0(nativeHandle, factor)))
 
@@ -397,6 +404,7 @@ open class TextSpanDescriptor internal constructor(handle: Long) : NativeObject(
      * Allows text to wrap at any character, not just spaces.
      */
     @Deprecated("This setting is not supported since the 2024.3 version. This flag should be handled automatically by the layout engine.")
+    @JvmOverloads
     open fun wrapAnywhere(value: Boolean = true): TextSpanDescriptor =
         TextSpanDescriptor(NativeBridge.checked(NativeBridge.lib.QP_TextSpanDescriptor_wrapAnywhere_0(nativeHandle, (if (value) 1 else 0))))
 }

@@ -1,7 +1,7 @@
 #!/usr/bin/env zx
 
-// Port-parity tests: runs the documentation-example suites of all three
-// runtimes — .NET (the reference), Kotlin/JVM and TypeScript/Node — against
+// Port-parity tests: runs the documentation-example suites of every runtime —
+// .NET (the reference), Kotlin/JVM, Java/JVM and TypeScript/Node — against
 // the same engine (the QuestPDF package version pinned by src/dotnet/interop)
 // and verifies that every example produced its output files and that the
 // bytes are identical across runtimes.
@@ -72,10 +72,14 @@ async function main() {
 
   const dotnetRun1 = await runDotnetSuite(engineVersion, 1);
   const dotnetRun2 = await runDotnetSuite(engineVersion, 2);
-  const jvmOutputs = await runJvmSuite();
-  const nodeOutputs = await runNodeSuite();
 
-  const report = compare(dotnetRun1, dotnetRun2, jvmOutputs, nodeOutputs);
+  const ports = [
+    { name: 'jvm-kotlin', outputs: await runJvmSuite('jvm-kotlin', 'docExamplesTest') },
+    { name: 'jvm-java', outputs: await runJvmSuite('jvm-java', 'docExamplesJavaTest') },
+    { name: 'node', outputs: await runNodeSuite() },
+  ];
+
+  const report = compare(dotnetRun1, dotnetRun2, ports);
   await fs.writeJson(`${parityRoot}/report.json`, report, { spaces: 2 });
 
   printReport(report);
@@ -167,11 +171,13 @@ async function runDotnetSuite(engineVersion, runIndex) {
   }
 }
 
-async function runJvmSuite() {
-  const outputDir = `${parityRoot}/jvm`;
+// The JVM package carries the documentation examples twice — once in Kotlin,
+// once in Java — each with its own Gradle test task and output directory.
+async function runJvmSuite(name, gradleTask) {
+  const outputDir = `${parityRoot}/${name}`;
   await fs.mkdirp(outputDir);
 
-  console.log('::group::jvm');
+  console.log(`::group::${name}`);
 
   try {
     const environment = {
@@ -181,7 +187,7 @@ async function runJvmSuite() {
       QUESTPDF_DOC_EXAMPLES_RESOURCES: resourcesDir,
     };
 
-    await $({ cwd: jvmPackageRoot, env: environment })`${gradlew} --no-daemon docExamplesTest`;
+    await $({ cwd: jvmPackageRoot, env: environment })`${gradlew} --no-daemon ${gradleTask}`;
     return await collectOutputs(outputDir, { sweep: false });
   } finally {
     console.log('::endgroup::');
@@ -252,7 +258,7 @@ async function hashFile(filePath) {
 
 // ---- comparison ----
 
-function compare(dotnetRun1, dotnetRun2, jvmOutputs, nodeOutputs) {
+function compare(dotnetRun1, dotnetRun2, ports) {
   const knownNotPorted = readKnownNotPorted();
   const report = { identical: [], presenceOnly: [], notPorted: [], failures: [] };
 
@@ -260,18 +266,18 @@ function compare(dotnetRun1, dotnetRun2, jvmOutputs, nodeOutputs) {
     if (knownNotPorted.has(name)) {
       report.notPorted.push(name);
 
-      for (const [runtime, outputs] of [['jvm', jvmOutputs], ['node', nodeOutputs]]) {
-        if (outputs.has(name))
-          report.failures.push(`${name}: listed in known-not-ported.txt but the ${runtime} port produced it — remove the stale entry.`);
+      for (const port of ports) {
+        if (port.outputs.has(name))
+          report.failures.push(`${name}: listed in known-not-ported.txt but the ${port.name} port produced it — remove the stale entry.`);
       }
 
       continue;
     }
 
-    const missing = [['jvm', jvmOutputs], ['node', nodeOutputs]].filter(([, outputs]) => !outputs.has(name));
+    const missing = ports.filter(port => !port.outputs.has(name));
 
     if (missing.length > 0) {
-      report.failures.push(`${name}: missing in ${missing.map(([runtime]) => runtime).join(' and ')}.`);
+      report.failures.push(`${name}: missing in ${missing.map(port => port.name).join(' and ')}.`);
       continue;
     }
 
@@ -282,10 +288,10 @@ function compare(dotnetRun1, dotnetRun2, jvmOutputs, nodeOutputs) {
       continue;
     }
 
-    const mismatched = [['jvm', jvmOutputs], ['node', nodeOutputs]].filter(([, outputs]) => outputs.get(name) !== hash);
+    const mismatched = ports.filter(port => port.outputs.get(name) !== hash);
 
     if (mismatched.length > 0)
-      report.failures.push(`${name}: bytes differ in ${mismatched.map(([runtime]) => runtime).join(' and ')}.`);
+      report.failures.push(`${name}: bytes differ in ${mismatched.map(port => port.name).join(' and ')}.`);
     else
       report.identical.push(name);
   }
@@ -296,10 +302,10 @@ function compare(dotnetRun1, dotnetRun2, jvmOutputs, nodeOutputs) {
       report.failures.push(`${name}: produced by the second .NET run only — the suite is not stable.`);
   }
 
-  for (const [runtime, outputs] of [['jvm', jvmOutputs], ['node', nodeOutputs]]) {
-    for (const name of outputs.keys()) {
+  for (const port of ports) {
+    for (const name of port.outputs.keys()) {
       if (!dotnetRun1.has(name))
-        report.failures.push(`${name}: produced by the ${runtime} port but not by .NET — output name drift?`);
+        report.failures.push(`${name}: produced by the ${port.name} port but not by .NET — output name drift?`);
     }
   }
 

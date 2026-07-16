@@ -43,6 +43,10 @@ export class Color extends NativeObject {
         return ((Native.checked(Native.lib.QP_Color_getRed_0(this.nativeHandle))) & 0xFF);
     }
 
+    toString(): string {
+        return Native.takeString(Native.checked(Native.lib.QP_Color_toString_0(this.nativeHandle)))!;
+    }
+
     toUInt32(): number {
         return ((Native.checked(Native.lib.QP_Color_toUInt32_0(this.nativeHandle))) >>> 0);
     }

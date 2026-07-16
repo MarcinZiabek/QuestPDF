@@ -183,6 +183,22 @@ public static unsafe class Exports_Color
         }
     }
 
+    [UnmanagedCallersOnly(EntryPoint = "QP_Color_toString_0")]
+    public static nint QP_Color_toString_0(long self)
+    {
+        try
+        {
+            var receiver = Interop.Handles.Get<global::QuestPDF.Infrastructure.Color>(self);
+            var result = receiver.ToString();
+            return Interop.AllocUtf8Return(result);
+        }
+        catch (Exception exception)
+        {
+            Interop.ReportError(exception);
+            return 0;
+        }
+    }
+
     [UnmanagedCallersOnly(EntryPoint = "QP_Color_toUInt32_0")]
     public static int QP_Color_toUInt32_0(long self)
     {

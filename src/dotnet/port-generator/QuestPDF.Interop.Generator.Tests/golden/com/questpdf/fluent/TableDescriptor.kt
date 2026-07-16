@@ -10,6 +10,7 @@ import com.questpdf.elements.table.TableCellContainerImpl
 import com.questpdf.interop.NativeBridge
 import com.questpdf.interop.NativeCallbackJToV
 import com.questpdf.interop.NativeObject
+import java.util.function.Consumer
 
 class TableDescriptor internal constructor(handle: Long) : NativeObject(handle) {
     /**
@@ -34,6 +35,18 @@ class TableDescriptor internal constructor(handle: Long) : NativeObject(handle) 
     }
 
     /**
+     * Specifies the order and size of the table columns.
+     * [Learn more](https://www.questpdf.com/api-reference/table/basics.html#columns-definition)
+     *
+     * This configuration affects both the main content as well as the header and footer sections.
+     *
+     * @param handler Handler to define columns of the table.
+     */
+    fun columnsDefinition(handler: Consumer<TableColumnsDefinitionDescriptor>) {
+        columnsDefinition({ handler.accept(this) })
+    }
+
+    /**
      * Adjusts rendering algorithm to better handle complex table structures, especially those spanning multiple pages.
      * This applies a unique rule to the final cells in each column, ensuring they stretch to fill the table's bottom edge.
      * Such an approach can enhance your table's visual appeal.
@@ -54,6 +67,15 @@ class TableDescriptor internal constructor(handle: Long) : NativeObject(handle) 
     }
 
     /**
+     * Specifies a table footer that appears on each page, positioned below the main content.
+     * The placement and dimensions of cells within this footer are distinct from the main content.
+     * [Learn more](https://www.questpdf.com/api-reference/table/header-and-footer.html)
+     */
+    fun footer(handler: Consumer<TableCellDescriptor>) {
+        footer({ handler.accept(this) })
+    }
+
+    /**
      * Specifies a table header that appears on each page, positioned above the main content.
      * The cell placement and dimensions in this header are distinct from those in the main content.
      * [Learn more](https://www.questpdf.com/api-reference/table/header-and-footer.html)
@@ -63,5 +85,16 @@ class TableDescriptor internal constructor(handle: Long) : NativeObject(handle) 
     fun header(handler: TableCellDescriptor.() -> Unit) {
         NativeBridge.lib.QP_TableDescriptor_header_0(nativeHandle, NativeBridge.retain(NativeCallbackJToV { p0 -> NativeBridge.guard(Unit) { handler(TableCellDescriptor(p0)) } }))
         NativeBridge.check()
+    }
+
+    /**
+     * Specifies a table header that appears on each page, positioned above the main content.
+     * The cell placement and dimensions in this header are distinct from those in the main content.
+     * [Learn more](https://www.questpdf.com/api-reference/table/header-and-footer.html)
+     *
+     * @param handler Handler for configuring the header cells.
+     */
+    fun header(handler: Consumer<TableCellDescriptor>) {
+        header({ handler.accept(this) })
     }
 }

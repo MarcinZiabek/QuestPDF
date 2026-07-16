@@ -127,8 +127,11 @@ public sealed class TsCompilerArtifactRule : ITsMethodRule
 }
 
 /// <summary>
-/// Object/equality plumbing (ToString, Equals, GetHashCode, ==, !=) is not part
-/// of the DSL surface; JavaScript object identity and toString cover it.
+/// Equality plumbing (Equals, GetHashCode, ==, !=) is not part of the DSL
+/// surface; JavaScript object identity covers it. Declared ToString overrides
+/// are NOT filtered: they carry real formatting semantics (Color renders as
+/// "#RRGGBB") and bridge as Object.prototype.toString overrides, so template
+/// literals produce the same text as C# string interpolation.
 /// </summary>
 public sealed class TsEqualityInfrastructureRule : ITsMethodRule
 {
@@ -139,7 +142,6 @@ public sealed class TsEqualityInfrastructureRule : ITsMethodRule
         var m = context.Method;
         return m.Name switch
         {
-            "ToString" when m.Parameters.Count == 0 => true,
             "GetHashCode" when m.Parameters.Count == 0 => true,
             "Equals" when m.Parameters.Count == 1 => true,
             "GetType" when m.Parameters.Count == 0 => true,

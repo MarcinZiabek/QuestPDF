@@ -624,6 +624,14 @@ public sealed class Classifier
                 if (function.IsOverride)
                     continue;
 
+                // kotlin.Any declares toString; a bridged ToString override must
+                // carry the override modifier even though Any is outside the model.
+                if (function is { Name: "toString", Parameters.Count: 0 })
+                {
+                    set.Functions[i] = function with { IsOverride = true };
+                    continue;
+                }
+
                 foreach (var (supertype, superset) in supertypeSets)
                 {
                     var match = superset!.Functions.FirstOrDefault(f =>

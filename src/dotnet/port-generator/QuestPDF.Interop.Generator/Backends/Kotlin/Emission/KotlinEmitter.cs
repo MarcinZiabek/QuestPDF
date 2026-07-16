@@ -260,6 +260,7 @@ public sealed partial class KotlinEmitter(KotlinBridgeViews views)
         writer.Line();
         writer.Line("companion object {");
         writer.Indent();
+        writer.Line("@JvmStatic");
         writer.Line($"fun fromValue(value: Int): {type.Name} = entries.first {{ it.value == value }}");
         writer.Outdent();
         writer.Line("}");
@@ -272,6 +273,8 @@ public sealed partial class KotlinEmitter(KotlinBridgeViews views)
     {
         EmitKDoc(writer, ctor.KDoc);
         EmitDeprecated(writer, ctor.DeprecationMessage);
+        if (ctor.IsJvmOverloads)
+            writer.Line("@JvmOverloads");
 
         var arguments = BuildCallArguments(ctor.Export, ctor.Parameters, resolver);
         var raw = $"NativeBridge.lib.{ctor.Export.EntryPoint}({string.Join(", ", arguments)})";
@@ -289,6 +292,8 @@ public sealed partial class KotlinEmitter(KotlinBridgeViews views)
     {
         EmitKDoc(writer, property.KDoc);
         EmitDeprecated(writer, property.DeprecationMessage);
+        if (property.IsJvmStatic)
+            writer.Line("@JvmStatic");
 
         var sb = new StringBuilder();
         if (property.IsOverride)
@@ -359,6 +364,10 @@ public sealed partial class KotlinEmitter(KotlinBridgeViews views)
     {
         EmitKDoc(writer, function.KDoc);
         EmitDeprecated(writer, function.DeprecationMessage);
+        if (function.IsJvmStatic)
+            writer.Line("@JvmStatic");
+        if (function.IsJvmOverloads)
+            writer.Line("@JvmOverloads");
 
         var sb = new StringBuilder();
         if (function.IsOverride)
@@ -395,6 +404,29 @@ public sealed partial class KotlinEmitter(KotlinBridgeViews views)
             sb.Append(" where ");
             sb.Append(string.Join(", ", function.TypeConstraints.Select(c =>
                 $"{c.TypeParameter} : {RenderType(c.Bound, resolver)}")));
+        }
+
+        if (function.Body is KotlinBody.Delegate delegation)
+        {
+            var call = $"{delegation.TargetName}({string.Join(", ", delegation.Arguments.Select(a => RenderDelegateArg(a, resolver)))})";
+
+            if (function.ReturnType.IsKotlinUnit)
+            {
+                writer.Line(sb + " {");
+                writer.Indent();
+                writer.Line(call);
+                writer.Outdent();
+                writer.Line("}");
+            }
+            else
+            {
+                writer.Line(sb + " =");
+                writer.Indent();
+                writer.Line(call);
+                writer.Outdent();
+            }
+
+            return;
         }
 
         if (function.Body is not KotlinBody.Bridge bridge)
@@ -442,6 +474,15 @@ public sealed partial class KotlinEmitter(KotlinBridgeViews views)
                 return;
         }
     }
+
+    private static string RenderDelegateArg(KDelegateArg argument, ImportResolver resolver) => argument switch
+    {
+        KDelegateArg.Ref reference => (reference.Spread ? "*" : "") + reference.Name,
+        KDelegateArg.Default def => RenderExpr(def.Value, resolver),
+        KDelegateArg.ConsumerAccept consumer => $"{{ {consumer.Name}.accept(this) }}",
+        KDelegateArg.Converted converted => $"{converted.Name}.{converted.Conversion}()",
+        _ => throw new InvalidOperationException($"Unknown delegate argument {argument.GetType().Name}"),
+    };
 
     /// <summary>Nullable scalar/enum returns: value plus a has-value out-parameter.</summary>
     private void EmitFlaggedReturn(

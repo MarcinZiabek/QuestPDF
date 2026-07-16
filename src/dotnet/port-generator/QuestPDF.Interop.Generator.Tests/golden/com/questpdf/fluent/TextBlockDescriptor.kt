@@ -79,6 +79,7 @@ class TextBlockDescriptor internal constructor(handle: Long) : TextSpanDescripto
     /**
      * Limits the number of visible lines in a paragraph, truncating overflow text with an ellipsis or by hiding it to maintain layout consistency.
      */
+    @JvmOverloads
     fun clampLines(maxLines: Int, ellipsis: String = "…"): TextBlockDescriptor =
         TextBlockDescriptor(NativeBridge.checked(NativeBridge.lib.QP_TextBlockDescriptor_clampLines_0(nativeHandle, maxLines, ellipsis)))
 
@@ -372,6 +373,7 @@ class TextBlockDescriptor internal constructor(handle: Long) : TextSpanDescripto
      * Specifies the horizontal offset of the first line in a paragraph.
      * Commonly used to visually separate paragraphs in a block of text.
      */
+    @JvmOverloads
     fun paragraphFirstLineIndentation(value: Float, unit: com.questpdf.infrastructure.Unit = com.questpdf.infrastructure.Unit.Point): TextBlockDescriptor =
         TextBlockDescriptor(NativeBridge.checked(NativeBridge.lib.QP_TextBlockDescriptor_paragraphFirstLineIndentation_0(nativeHandle, value, unit.value)))
 
@@ -379,6 +381,7 @@ class TextBlockDescriptor internal constructor(handle: Long) : TextSpanDescripto
      * Adjusts the vertical gap between successive paragraphs (separated by line breaks),
      * helping to visually separate blocks of text for improved readability.
      */
+    @JvmOverloads
     fun paragraphSpacing(value: Float, unit: com.questpdf.infrastructure.Unit = com.questpdf.infrastructure.Unit.Point): TextBlockDescriptor =
         TextBlockDescriptor(NativeBridge.checked(NativeBridge.lib.QP_TextBlockDescriptor_paragraphSpacing_0(nativeHandle, value, unit.value)))
 

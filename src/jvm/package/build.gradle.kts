@@ -17,6 +17,12 @@ kotlin {
     jvmToolchain(21)
 }
 
+// The Java documentation examples contain non-ASCII literals (Arabic, emoji);
+// javac must not fall back to the platform encoding (cp1252 on Windows CI).
+tasks.withType<JavaCompile>().configureEach {
+    options.encoding = "UTF-8"
+}
+
 java {
     // Maven Central requires -sources and -javadoc artifacts for the main jar.
     // The javadoc jar is empty (Kotlin sources produce no javadoc), which the
@@ -51,11 +57,23 @@ sourceSets {
         compileClasspath += sourceSets.main.get().output + sourceSets.main.get().compileClasspath
         runtimeClasspath += output + compileClasspath
     }
+
+    // The same documentation examples ported to Java: the package targets both
+    // JVM languages, so every example exists in Kotlin and in Java form and
+    // both suites must produce identical images.
+    create("docExamplesJava") {
+        java.setSrcDirs(listOf("src/doc-examples/java"))
+        kotlin.setSrcDirs(emptyList<String>())
+        compileClasspath += sourceSets.main.get().output + sourceSets.main.get().compileClasspath
+        runtimeClasspath += output + compileClasspath
+    }
 }
 
 dependencies {
     "docExamplesImplementation"("org.junit.jupiter:junit-jupiter:5.13.4")
     "docExamplesRuntimeOnly"("org.junit.platform:junit-platform-launcher:1.13.4")
+    "docExamplesJavaImplementation"("org.junit.jupiter:junit-jupiter:5.13.4")
+    "docExamplesJavaRuntimeOnly"("org.junit.platform:junit-platform-launcher:1.13.4")
 }
 
 // ---- native library (dotnet publish, NativeAOT) ----
@@ -286,37 +304,45 @@ tasks.register<JavaExec>("runSamples") {
 
 // ---- documentation examples (port-parity tests) ----
 
-tasks.register<Test>("docExamplesTest") {
-    group = "verification"
-    description = "Runs the ported documentation examples; images land in the directory given by QUESTPDF_DOC_EXAMPLES_OUTPUT."
-    testClassesDirs = sourceSets["docExamples"].output.classesDirs
-    classpath = sourceSets["docExamples"].runtimeClasspath
-    useJUnitPlatform()
+// One suite per JVM language, both over the same example set; each writes the
+// full set of images so the port-parity tests can compare the two suites (and
+// the other runtimes) byte-for-byte.
+fun registerDocExamplesTest(taskName: String, sourceSetName: String, defaultOutputDir: String) =
+    tasks.register<Test>(taskName) {
+        group = "verification"
+        description = "Runs the ported documentation examples ($sourceSetName); images land in the directory given by QUESTPDF_DOC_EXAMPLES_OUTPUT."
+        testClassesDirs = sourceSets[sourceSetName].output.classesDirs
+        classpath = sourceSets[sourceSetName].runtimeClasspath
+        useJUnitPlatform()
 
-    // An externally published native runtime (the parity script publishes one
-    // for all suites) wins; otherwise the local publishNative output is used.
-    if (System.getenv("QUESTPDF_NATIVE_DIR") == null) {
-        dependsOn(publishNative)
-        systemProperty("questpdf.native.dir", nativesRoot.resolve(currentRid).absolutePath)
+        // An externally published native runtime (the parity script publishes one
+        // for all suites) wins; otherwise the local publishNative output is used.
+        if (System.getenv("QUESTPDF_NATIVE_DIR") == null) {
+            dependsOn(publishNative)
+            systemProperty("questpdf.native.dir", nativesRoot.resolve(currentRid).absolutePath)
+        }
+
+        environment(
+            "QUESTPDF_DOC_EXAMPLES_OUTPUT",
+            System.getenv("QUESTPDF_DOC_EXAMPLES_OUTPUT")
+                ?: layout.buildDirectory.dir(defaultOutputDir).get().asFile.absolutePath,
+        )
+        environment(
+            "QUESTPDF_DOC_EXAMPLES_RESOURCES",
+            System.getenv("QUESTPDF_DOC_EXAMPLES_RESOURCES")
+                ?: repoRoot.resolve("src/dotnet/library/QuestPDF.DocumentationExamples/Resources").absolutePath,
+        )
+
+        // The suite writes files consumed by an external comparison; never skip it.
+        outputs.upToDateWhen { false }
     }
 
-    environment(
-        "QUESTPDF_DOC_EXAMPLES_OUTPUT",
-        System.getenv("QUESTPDF_DOC_EXAMPLES_OUTPUT")
-            ?: layout.buildDirectory.dir("doc-examples-output").get().asFile.absolutePath,
-    )
-    environment(
-        "QUESTPDF_DOC_EXAMPLES_RESOURCES",
-        System.getenv("QUESTPDF_DOC_EXAMPLES_RESOURCES")
-            ?: repoRoot.resolve("src/dotnet/library/QuestPDF.DocumentationExamples/Resources").absolutePath,
-    )
-
-    // The suite writes files consumed by an external comparison; never skip it.
-    outputs.upToDateWhen { false }
-}
+registerDocExamplesTest("docExamplesTest", "docExamples", "doc-examples-output/kotlin")
+registerDocExamplesTest("docExamplesJavaTest", "docExamplesJava", "doc-examples-output/java")
 
 // Samples and documentation examples must always compile as part of a regular build.
 tasks.named("check") {
     dependsOn(tasks.named("compileSamplesKotlin"))
     dependsOn(tasks.named("compileDocExamplesKotlin"))
+    dependsOn(tasks.named("compileDocExamplesJavaJava"))
 }

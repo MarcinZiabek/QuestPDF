@@ -38,7 +38,7 @@ public sealed class KotlinBackend : ILanguageBackend
     {
         var index = new ApiIndex(assembly);
         var mapper = new TypeMapper(index);
-        var model = Classifier.Classify(index, mapper, overrides);
+        var model = JavaFriendliness.Apply(Classifier.Classify(index, mapper, overrides));
 
         // Views must share the classifier's index/mapper: type-support marks
         // accumulated during classification affect type mapping.

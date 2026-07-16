@@ -29,14 +29,14 @@ env:
   DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: 1
 
 # On every supported platform, the parity script builds QuestPDF.Native once,
-# runs the documentation-example suites of all three runtimes (.NET against the
-# same pinned QuestPDF package the ports are generated from), and verifies that
-# every produced image exists and is byte-identical across runtimes. This
-# proves the fluent API + FFI wrapper layers reproduce the .NET behavior
-# exactly.
+# runs the documentation-example suites of every runtime — .NET (against the
+# same pinned QuestPDF package the ports are generated from), Kotlin/JVM,
+# Java/JVM and TypeScript/Node — and verifies that every produced image exists
+# and is byte-identical across runtimes. This proves the fluent API + FFI
+# wrapper layers reproduce the .NET behavior exactly.
 #
 # linux-musl-x64 is excluded: the JVM port does not support musl (JNA ships no
-# musl build of libjnidispatch), so the three-runtime comparison is impossible
+# musl build of libjnidispatch), so the cross-runtime comparison is impossible
 # there. The node package tests already cover musl natives.
 jobs:
   parity:

@@ -20,6 +20,7 @@ object Settings {
      *
      * By default, this flag is enabled only when the debugger IS attached.
      */
+    @JvmStatic
     var checkIfAllTextGlyphsAreAvailable: Boolean
         get() = (NativeBridge.checked(NativeBridge.lib.QP_Settings_getCheckIfAllTextGlyphsAreAvailable_0()) != 0)
         set(value) {
@@ -28,6 +29,7 @@ object Settings {
         }
 
     @Deprecated("This setting is ignored since the 2023.10 version. The new infinite layout detection algorithm works automatically. You can safely remove this setting from your codebase.")
+    @JvmStatic
     var documentLayoutExceptionThreshold: Int
         get() = NativeBridge.checked(NativeBridge.lib.QP_Settings_getDocumentLayoutExceptionThreshold_0())
         set(value) {
@@ -41,6 +43,7 @@ object Settings {
      *
      * Enabled by default.
      */
+    @JvmStatic
     var enableCaching: Boolean
         get() = (NativeBridge.checked(NativeBridge.lib.QP_Settings_getEnableCaching_0()) != 0)
         set(value) {
@@ -54,6 +57,7 @@ object Settings {
      *
      * By default, this flag is enabled only when the debugger IS attached.
      */
+    @JvmStatic
     var enableDebugging: Boolean
         get() = (NativeBridge.checked(NativeBridge.lib.QP_Settings_getEnableDebugging_0()) != 0)
         set(value) {
@@ -66,6 +70,7 @@ object Settings {
      *
      * For more details, please check the [QuestPDF Pricing webpage](https://www.questpdf.com/pricing) and [QuestPDF License webpage](https://www.questpdf.com/license).
      */
+    @JvmStatic
     var license: LicenseType?
         get() {
             val outHasValue = ByteByReference()
@@ -82,6 +87,7 @@ object Settings {
      * Gets or sets the file path used for temporary storage during the document generation process.
      * This path is used by various operations that require temporary files.
      */
+    @JvmStatic
     var temporaryStoragePath: String?
         get() = NativeBridge.takeString(NativeBridge.checked(NativeBridge.lib.QP_Settings_getTemporaryStoragePath_0()))
         set(value) {
@@ -98,6 +104,7 @@ object Settings {
      *
      * This property is useful when you want to control the fonts used by your application, especially in cases where the environment might not have the necessary fonts installed.
      */
+    @JvmStatic
     var useEnvironmentFonts: Boolean
         get() = (NativeBridge.checked(NativeBridge.lib.QP_Settings_getUseEnvironmentFonts_0()) != 0)
         set(value) {

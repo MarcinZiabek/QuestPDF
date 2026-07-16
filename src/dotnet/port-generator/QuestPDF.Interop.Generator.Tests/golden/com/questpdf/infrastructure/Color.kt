@@ -31,6 +31,9 @@ class Color internal constructor(handle: Long) : NativeObject(handle) {
     val red: UByte
         get() = NativeBridge.checked(NativeBridge.lib.QP_Color_getRed_0(nativeHandle)).toUByte()
 
+    override fun toString(): String =
+        NativeBridge.takeString(NativeBridge.checked(NativeBridge.lib.QP_Color_toString_0(nativeHandle)))!!
+
     fun toUInt(): UInt =
         NativeBridge.checked(NativeBridge.lib.QP_Color_toUInt32_0(nativeHandle)).toUInt()
 
@@ -54,19 +57,44 @@ class Color internal constructor(handle: Long) : NativeObject(handle) {
     fun withAlpha(alpha: UByte): Color =
         Color(NativeBridge.checked(NativeBridge.lib.QP_Color_withAlpha_0(nativeHandle, alpha.toByte())))
 
+    /**
+     * Creates a new color instance with the specified alpha transparency value.
+     * The alpha value should be within the range 0 to 255, where 0 represents fully transparent
+     * and 255 represents fully opaque.
+     *
+     * @return A new color instance with the adjusted alpha transparency.
+     */
+    fun withAlpha(alpha: Int): Color =
+        withAlpha(alpha.toUByte())
+
     companion object {
+        @JvmStatic
         fun from(hex: String): Color =
             Color(NativeBridge.checked(NativeBridge.lib.QP_Color_from_0(hex)))
 
+        @JvmStatic
         fun from(hex: UInt): Color =
             Color(NativeBridge.checked(NativeBridge.lib.QP_Color_from_1(hex.toInt())))
+
+        @JvmStatic
+        fun from(hex: Int): Color =
+            from(hex.toUInt())
 
         /**
          * Creates a new color instance from the specified alpha, red, green, and blue component values.
          * Each component should be within the range 0 to 255.
          */
+        @JvmStatic
         fun fromARGB(alpha: UByte, red: UByte, green: UByte, blue: UByte): Color =
             Color(NativeBridge.checked(NativeBridge.lib.QP_Color_fromARGB_0(alpha.toByte(), red.toByte(), green.toByte(), blue.toByte())))
+
+        /**
+         * Creates a new color instance from the specified alpha, red, green, and blue component values.
+         * Each component should be within the range 0 to 255.
+         */
+        @JvmStatic
+        fun fromARGB(alpha: Int, red: Int, green: Int, blue: Int): Color =
+            fromARGB(alpha.toUByte(), red.toUByte(), green.toUByte(), blue.toUByte())
 
         /**
          * Creates a new color instance from a hex string representation.
@@ -76,6 +104,7 @@ class Color internal constructor(handle: Long) : NativeObject(handle) {
          * @param hex The hex string representing the color.
          * @return A new color instance created from the hex string.
          */
+        @JvmStatic
         fun fromHex(hex: String): Color =
             Color(NativeBridge.checked(NativeBridge.lib.QP_Color_fromHex_0(hex)))
 
@@ -83,7 +112,16 @@ class Color internal constructor(handle: Long) : NativeObject(handle) {
          * Creates a new color instance given the red, green, and blue component values.
          * Each component should be within the range 0 to 255.
          */
+        @JvmStatic
         fun fromRGB(red: UByte, green: UByte, blue: UByte): Color =
             Color(NativeBridge.checked(NativeBridge.lib.QP_Color_fromRGB_0(red.toByte(), green.toByte(), blue.toByte())))
+
+        /**
+         * Creates a new color instance given the red, green, and blue component values.
+         * Each component should be within the range 0 to 255.
+         */
+        @JvmStatic
+        fun fromRGB(red: Int, green: Int, blue: Int): Color =
+            fromRGB(red.toUByte(), green.toUByte(), blue.toUByte())
     }
 }

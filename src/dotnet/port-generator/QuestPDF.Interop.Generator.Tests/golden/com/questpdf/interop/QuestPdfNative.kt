@@ -747,6 +747,7 @@ internal interface QuestPdfNative : QuestPdfNativeRuntime {
     fun QP_Color_getGreen_0(self: Long): Byte
     fun QP_Color_getHex_0(self: Long): Int
     fun QP_Color_getRed_0(self: Long): Byte
+    fun QP_Color_toString_0(self: Long): Pointer?
     fun QP_Color_toUInt32_0(self: Long): Int
     fun QP_Color_withAlpha_1(self: Long, alpha: Float): Long
     fun QP_Color_withAlpha_0(self: Long, alpha: Byte): Long
@@ -1012,6 +1013,7 @@ internal interface QuestPdfNative : QuestPdfNativeRuntime {
     fun QP_Size_getWidth_0(self: Long): Float
     fun QP_Size_getMax_0(): Long
     fun QP_Size_getZero_0(): Long
+    fun QP_Size_toString_0(self: Long): Pointer?
     fun QP_SvgImage_dispose_0(self: Long)
     fun QP_SvgImage_fromFile_0(filePath: String?): Long
     fun QP_SvgImage_fromText_0(svg: String?): Long
@@ -1056,6 +1058,7 @@ internal interface QuestPdfNative : QuestPdfNativeRuntime {
     fun QP_TextStyle_subscript_0(self: Long): Long
     fun QP_TextStyle_superscript_0(self: Long): Long
     fun QP_TextStyle_thin_0(self: Long): Long
+    fun QP_TextStyle_toString_0(self: Long): Pointer?
     fun QP_TextStyle_underline_0(self: Long, value: Int): Long
     fun QP_TextStyle_weight_0(self: Long, weight: Int): Long
     fun QP_TextStyle_wordSpacing_0(self: Long, factor: Float): Long

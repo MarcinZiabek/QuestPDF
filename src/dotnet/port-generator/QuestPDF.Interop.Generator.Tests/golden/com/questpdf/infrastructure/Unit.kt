@@ -23,6 +23,7 @@ enum class Unit(val value: Int) {
     ;
 
     companion object {
+        @JvmStatic
         fun fromValue(value: Int): Unit = entries.first { it.value == value }
     }
 }

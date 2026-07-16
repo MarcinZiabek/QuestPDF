@@ -1195,7 +1195,7 @@ struct QuestPDF.Infrastructure.Color  => generated
   static-method FromARGB(alpha: System.Byte, red: System.Byte, green: System.Byte, blue: System.Byte) -> QuestPDF.Infrastructure.Color [doc]  => generated
   static-method FromHex(hex: System.String) -> QuestPDF.Infrastructure.Color [doc]  => generated
   static-method FromRGB(red: System.Byte, green: System.Byte, blue: System.Byte) -> QuestPDF.Infrastructure.Color [doc]  => generated
-  method ToString() -> System.String  => infrastructure
+  method ToString() -> System.String  => generated
   method WithAlpha(alpha: System.Byte) -> QuestPDF.Infrastructure.Color [doc]  => generated
   method WithAlpha(alpha: System.Single) -> QuestPDF.Infrastructure.Color [doc]  => generated
   operator op_Implicit(color: QuestPDF.Infrastructure.Color) -> System.String  => unsupported: conversion to String collides with toString(); use toString() instead
@@ -1368,7 +1368,7 @@ struct QuestPDF.Infrastructure.Size  => generated
   static-property Max: QuestPDF.Infrastructure.Size { get; }  => generated
   static-property Zero: QuestPDF.Infrastructure.Size { get; }  => generated
   ctor (width: System.Single, height: System.Single)  => generated
-  method ToString() -> System.String  => infrastructure
+  method ToString() -> System.String  => generated
 
 class QuestPDF.Infrastructure.SvgImage implements System.IDisposable [internal-ctor] [doc]  => generated
   method Dispose() -> System.Void  => generated
@@ -1397,7 +1397,7 @@ class QuestPDF.Infrastructure.TextStyle implements System.IEquatable<QuestPDF.In
   method Equals(other: QuestPDF.Infrastructure.TextStyle?) -> System.Boolean  => infrastructure
   method Equals(obj: System.Object?) -> System.Boolean  => infrastructure
   method GetHashCode() -> System.Int32  => infrastructure
-  method ToString() -> System.String  => infrastructure
+  method ToString() -> System.String  => generated
   operator op_Equality(left: QuestPDF.Infrastructure.TextStyle?, right: QuestPDF.Infrastructure.TextStyle?) -> System.Boolean  => infrastructure
   operator op_Inequality(left: QuestPDF.Infrastructure.TextStyle?, right: QuestPDF.Infrastructure.TextStyle?) -> System.Boolean  => infrastructure
 
