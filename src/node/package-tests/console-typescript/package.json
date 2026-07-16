@@ -4,7 +4,7 @@
     "private": true,
     "description": "TypeScript console app consuming the questpdf package (and its shipped type declarations) from the local feed.",
     "scripts": {
-        "build": "tsc"
+        "build": "tsc && node -e \"require('node:fs').cpSync('fonts', 'dist/fonts', { recursive: true })\""
     },
     "devDependencies": {
         "@types/node": "^24.0.0",

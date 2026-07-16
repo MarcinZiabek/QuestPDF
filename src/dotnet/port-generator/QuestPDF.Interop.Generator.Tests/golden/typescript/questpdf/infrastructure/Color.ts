@@ -20,31 +20,31 @@ export class Color extends NativeObject {
             return;
         }
         const hex = args[0] as number;
-        super(Native.checked(Native.lib.QP_Color_ctor_0(hex)), NATIVE_HANDLE);
+        super(Native.checked(Native.lib.QP_Color_ctor_0(((hex) | 0))), NATIVE_HANDLE);
     }
 
     get alpha(): number {
-        return Native.checked(Native.lib.QP_Color_getAlpha_0(this.nativeHandle));
+        return ((Native.checked(Native.lib.QP_Color_getAlpha_0(this.nativeHandle))) & 0xFF);
     }
 
     get blue(): number {
-        return Native.checked(Native.lib.QP_Color_getBlue_0(this.nativeHandle));
+        return ((Native.checked(Native.lib.QP_Color_getBlue_0(this.nativeHandle))) & 0xFF);
     }
 
     get green(): number {
-        return Native.checked(Native.lib.QP_Color_getGreen_0(this.nativeHandle));
+        return ((Native.checked(Native.lib.QP_Color_getGreen_0(this.nativeHandle))) & 0xFF);
     }
 
     get hex(): number {
-        return Native.checked(Native.lib.QP_Color_getHex_0(this.nativeHandle));
+        return ((Native.checked(Native.lib.QP_Color_getHex_0(this.nativeHandle))) >>> 0);
     }
 
     get red(): number {
-        return Native.checked(Native.lib.QP_Color_getRed_0(this.nativeHandle));
+        return ((Native.checked(Native.lib.QP_Color_getRed_0(this.nativeHandle))) & 0xFF);
     }
 
     toUInt32(): number {
-        return Native.checked(Native.lib.QP_Color_toUInt32_0(this.nativeHandle));
+        return ((Native.checked(Native.lib.QP_Color_toUInt32_0(this.nativeHandle))) >>> 0);
     }
 
     /**
@@ -55,7 +55,7 @@ export class Color extends NativeObject {
      * @returns A new color instance with the adjusted alpha transparency.
      */
     withAlpha(alpha: number): Color {
-        return new Color(Native.checked(Native.lib.QP_Color_withAlpha_0(this.nativeHandle, alpha)), NATIVE_HANDLE);
+        return new Color(Native.checked(Native.lib.QP_Color_withAlpha_0(this.nativeHandle, (((alpha) << 24) >> 24))), NATIVE_HANDLE);
     }
 
     static from(hex: number): Color;
@@ -63,7 +63,7 @@ export class Color extends NativeObject {
     static from(...args: any[]): any {
         if (args.length === 1 && typeof args[0] === "number") {
             const hex = args[0] as number;
-            return new Color(Native.checked(Native.lib.QP_Color_from_1(hex)), NATIVE_HANDLE);
+            return new Color(Native.checked(Native.lib.QP_Color_from_1(((hex) | 0))), NATIVE_HANDLE);
         }
         if (args.length === 1 && typeof args[0] === "string") {
             const hex = args[0] as string;
@@ -77,7 +77,7 @@ export class Color extends NativeObject {
      * Each component should be within the range 0 to 255.
      */
     static fromARGB(alpha: number, red: number, green: number, blue: number): Color {
-        return new Color(Native.checked(Native.lib.QP_Color_fromARGB_0(alpha, red, green, blue)), NATIVE_HANDLE);
+        return new Color(Native.checked(Native.lib.QP_Color_fromARGB_0((((alpha) << 24) >> 24), (((red) << 24) >> 24), (((green) << 24) >> 24), (((blue) << 24) >> 24))), NATIVE_HANDLE);
     }
 
     /**
@@ -97,6 +97,6 @@ export class Color extends NativeObject {
      * Each component should be within the range 0 to 255.
      */
     static fromRGB(red: number, green: number, blue: number): Color {
-        return new Color(Native.checked(Native.lib.QP_Color_fromRGB_0(red, green, blue)), NATIVE_HANDLE);
+        return new Color(Native.checked(Native.lib.QP_Color_fromRGB_0((((red) << 24) >> 24), (((green) << 24) >> 24), (((blue) << 24) >> 24))), NATIVE_HANDLE);
     }
 }

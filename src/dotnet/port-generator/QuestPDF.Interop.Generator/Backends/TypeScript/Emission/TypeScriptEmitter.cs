@@ -772,7 +772,16 @@ public sealed class TypeScriptEmitter(TsBridgeViews views)
             case RuntimeKind.Date: return $"{value} instanceof Date";
             case RuntimeKind.ArrayLike: return $"Array.isArray({value})";
             case RuntimeKind.Iterable: return $"typeof ({value} as any)?.[Symbol.iterator] === \"function\"";
-            case RuntimeKind.Handle: return $"{value} instanceof {resolver.Manual("native-object", "NativeObject")}";
+            case RuntimeKind.Handle:
+            {
+                // Concrete-class handles are tested nominally so overloads that
+                // differ only in wrapper class dispatch correctly (structural
+                // typing would let either instance pass a NativeObject test).
+                var dispatchType = HandleDispatchTypeAt(function, position);
+                return dispatchType is null
+                    ? $"{value} instanceof {resolver.Manual("native-object", "NativeObject")}"
+                    : $"{value} instanceof {resolver.Generated(dispatchType)}";
+            }
             case RuntimeKind.UserImpl:
             {
                 var method = UserImplMethodAt(function, position);
@@ -791,6 +800,16 @@ public sealed class TypeScriptEmitter(TsBridgeViews views)
 
         return bridge.Export.Parameters[position].Marshal is BridgeMarshal.UserImplValue user
             ? views.ProxyMethodName(user.Proxy)
+            : null;
+    }
+
+    private TsType? HandleDispatchTypeAt(TsFunction function, int position)
+    {
+        if (function.Body is not TsBody.Bridge bridge || position >= bridge.Export.Parameters.Count)
+            return null;
+
+        return bridge.Export.Parameters[position].Marshal is BridgeMarshal.Handle handle
+            ? views.HandleDispatchType(handle)
             : null;
     }
 
@@ -842,7 +861,7 @@ public sealed class TypeScriptEmitter(TsBridgeViews views)
 
             case BridgeMarshal.NullableScalar n:
                 yield return $"({name} != null ? 1 : 0)";
-                yield return n.Kind == ScalarKind.Boolean ? $"({name} ? 1 : 0)" : $"({name} ?? 0)";
+                yield return n.Kind == ScalarKind.Boolean ? $"({name} ? 1 : 0)" : ScalarOut($"({name} ?? 0)", n.Kind);
                 break;
 
             case BridgeMarshal.EnumValue enumValue:
@@ -997,7 +1016,7 @@ public sealed class TypeScriptEmitter(TsBridgeViews views)
 
                 case BridgeMarshal.NullableScalar n:
                 {
-                    var value = n.Kind == ScalarKind.Boolean ? $"p{slot + 1} !== 0" : $"p{slot + 1}";
+                    var value = ScalarIn($"p{slot + 1}", n.Kind);
                     unwrapped.Add($"(p{slot} !== 0 ? {value} : null)");
                     Declare(AbiSlot.Byte);
                     Declare(BridgeAbi.ScalarSlot(n.Kind));
@@ -1099,15 +1118,25 @@ public sealed class TypeScriptEmitter(TsBridgeViews views)
         }
     }
 
+    // Unsigned values cross the ABI through same-width signed slots (like the
+    // Kotlin backend's toByte()/toUByte() pairs): ScalarOut reinterprets the
+    // unsigned JS value as its two's-complement signed bit pattern, ScalarIn
+    // converts the signed native value back to the unsigned range.
     private static string ScalarOut(string expression, ScalarKind kind) => kind switch
     {
         ScalarKind.Boolean => $"({expression} ? 1 : 0)",
+        ScalarKind.UByte => $"((({expression}) << 24) >> 24)",
+        ScalarKind.UShort => $"((({expression}) << 16) >> 16)",
+        ScalarKind.UInt => $"(({expression}) | 0)",
         _ => expression,
     };
 
     private static string ScalarIn(string expression, ScalarKind kind) => kind switch
     {
         ScalarKind.Boolean => $"({expression} !== 0)",
+        ScalarKind.UByte => $"(({expression}) & 0xFF)",
+        ScalarKind.UShort => $"(({expression}) & 0xFFFF)",
+        ScalarKind.UInt => $"(({expression}) >>> 0)",
         _ => expression,
     };
 

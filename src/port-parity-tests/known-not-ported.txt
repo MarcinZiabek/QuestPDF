@@ -1,0 +1,15 @@
+# Output files whose documentation-example tests are deliberately not ported
+# to the Kotlin/TypeScript suites (one file name per line). The parity run
+# fails if a listed file is suddenly produced by a port, so entries cannot go
+# stale. Whole example classes that stay .NET-only (ScottPlot, ZXing,
+# SkiaSharp, Mapbox integrations) are excluded from the .NET parity run
+# directly in run-tests.mjs and do not need entries here.
+
+# ImageExamples.DynamicImage — synthesizes the image with .NET SkiaSharp.
+image-dynamic.webp
+
+# CodePatternCapturePositionExample.Example — depends on
+# DynamicContext.GetContentCapturedPositions, which is unsupported in both the
+# JVM and Node bridges (ICollection<PageElementLocation> is only bridged in
+# parameter position).
+code-pattern-element-position-locator.webp

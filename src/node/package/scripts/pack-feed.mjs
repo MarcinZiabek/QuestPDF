@@ -10,7 +10,7 @@
 //   node scripts/pack-feed.mjs [--version <v>] [--natives-dir <dir>] [--feed-dir <dir>] [--require-all]
 
 import { execSync } from 'node:child_process';
-import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
@@ -83,6 +83,13 @@ for (const rid of stagedRids) {
     const platform = platforms[rid];
     const packageDir = path.join(packageRoot, 'build', 'native-packages', platform.id);
 
+    // The runtime registers every font deployed next to the natives; the
+    // bundled Lato family (QuestPDF's default typeface) must ship with every
+    // platform, like the LatoFont folder in the NuGet package.
+    const latoDirectory = path.join(nativesDir, rid, 'LatoFont');
+    if (!existsSync(latoDirectory) || !readdirSync(latoDirectory).some(file => file.endsWith('.ttf')))
+        throw new Error(`The staged native directory for ${rid} does not contain the bundled LatoFont fonts.`);
+
     rmSync(packageDir, { recursive: true, force: true });
     mkdirSync(packageDir, { recursive: true });
 
@@ -90,14 +97,29 @@ for (const rid of stagedRids) {
         name: `@questpdf/native-${platform.id}`,
         version,
         description: `QuestPDF native runtime for ${platform.id}. Installed automatically as an optional dependency of the questpdf package.`,
-        license: 'MIT',
+        license: 'SEE LICENSE IN LICENSE.md',
+        author: 'Marcin Ziąbek (CodeFlint)',
+        homepage: 'https://www.questpdf.com',
+        repository: { type: 'git', url: 'git+https://github.com/QuestPDF/QuestPDF.git' },
+        bugs: { url: 'https://github.com/QuestPDF/QuestPDF/issues' },
         os: [platform.os],
         cpu: [platform.cpu],
         ...(platform.libc ? { libc: platform.libc } : {}),
+        engines: { node: '>=18' },
+        // Scoped packages default to restricted access on the npm registry.
+        publishConfig: { access: 'public' },
         files: ['native'],
     };
 
+    const readme =
+        `# @questpdf/native-${platform.id}\n\n` +
+        `The QuestPDF native runtime for ${platform.id}. This package is installed automatically ` +
+        `as an optional dependency of [questpdf](https://www.npmjs.com/package/questpdf) — do not depend on it directly.\n\n` +
+        `Learn more at [www.questpdf.com](https://www.questpdf.com).\n`;
+
     writeFileSync(path.join(packageDir, 'package.json'), JSON.stringify(manifest, null, 4) + '\n');
+    writeFileSync(path.join(packageDir, 'README.md'), readme);
+    cpSync(path.join(repoRoot, 'LICENSE.md'), path.join(packageDir, 'LICENSE.md'));
     cpSync(path.join(nativesDir, rid), path.join(packageDir, 'native'), { recursive: true });
 
     console.log(`Packing @questpdf/native-${platform.id}@${version}`);
@@ -115,13 +137,19 @@ manifest.version = version;
 for (const name of Object.keys(manifest.optionalDependencies ?? {}))
     manifest.optionalDependencies[name] = version;
 
+// The license text lives once at the repository root; it is copied in only
+// for the duration of the pack (npm always includes LICENSE.md and README.md).
+const licensePath = path.join(packageRoot, 'LICENSE.md');
+
 try {
     writeFileSync(manifestPath, JSON.stringify(manifest, null, 4) + '\n');
+    cpSync(path.join(repoRoot, 'LICENSE.md'), licensePath);
 
     console.log(`Packing questpdf@${version}`);
     run(`npm pack --pack-destination "${feedDir}"`, packageRoot);
 } finally {
     writeFileSync(manifestPath, originalManifest);
+    rmSync(licensePath, { force: true });
 }
 
 console.log(`\nPacked questpdf@${version} (natives: ${stagedRids.join(', ')}) into ${feedDir}`);

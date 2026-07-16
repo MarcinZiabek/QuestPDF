@@ -1,0 +1,97 @@
+name: Port Parity Tests
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/port-parity-tests.yml'
+      - 'src/dotnet/interop/**'
+      - 'src/dotnet/port-generator/**'
+      - 'src/dotnet/library/QuestPDF.DocumentationExamples/**'
+      - 'src/jvm/**'
+      - 'src/node/**'
+      - 'src/port-parity-tests/**'
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/port-parity-tests.yml'
+      - 'src/dotnet/interop/**'
+      - 'src/dotnet/port-generator/**'
+      - 'src/dotnet/library/QuestPDF.DocumentationExamples/**'
+      - 'src/jvm/**'
+      - 'src/node/**'
+      - 'src/port-parity-tests/**'
+  workflow_dispatch:
+
+env:
+  DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: 1
+
+# On every supported platform, the parity script builds QuestPDF.Native once,
+# runs the documentation-example suites of all three runtimes (.NET against the
+# same pinned QuestPDF package the ports are generated from), and verifies that
+# every produced image exists and is byte-identical across runtimes. This
+# proves the fluent API + FFI wrapper layers reproduce the .NET behavior
+# exactly.
+#
+# linux-musl-x64 is excluded: the JVM port does not support musl (JNA ships no
+# musl build of libjnidispatch), so the three-runtime comparison is impossible
+# there. The node package tests already cover musl natives.
+jobs:
+  parity:
+    name: Parity ${{ matrix.platform.rid }}
+    runs-on: ${{ matrix.platform.runs-on }}
+    timeout-minutes: 45
+
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - { rid: win-x64, runs-on: windows-latest }
+          - { rid: win-arm64, runs-on: windows-11-arm }
+          - { rid: linux-x64, runs-on: ubuntu-latest }
+          - { rid: linux-arm64, runs-on: ubuntu-24.04-arm }
+          - { rid: osx-x64, runs-on: macos-26-intel }
+          - { rid: osx-arm64, runs-on: macos-latest }
+
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install zx
+        shell: bash
+        run: npm install --global zx@8
+
+      - name: Generate interop sources
+        run: dotnet run --project src/dotnet/port-generator/QuestPDF.Interop.Generator
+
+      - name: Run port parity tests
+        shell: bash
+        run: zx src/port-parity-tests/run-tests.mjs
+
+      - name: Upload parity report and outputs
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: port-parity-${{ matrix.platform.rid }}
+          path: |
+            artifacts/port-parity/**
+            !artifacts/port-parity/native/**
+          if-no-files-found: ignore

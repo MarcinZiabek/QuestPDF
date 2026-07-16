@@ -544,7 +544,9 @@ public sealed class TsClassifier
         // Prefer non-deprecated members on clashes.
         foreach (var function in functions.OrderBy(f => f.DeprecationMessage is null ? 0 : 1))
         {
-            var clash = kept.FirstOrDefault(k => k.Name == function.Name && !Distinguishable(k, function));
+            var clash = kept.FirstOrDefault(k =>
+                k.Name == function.Name &&
+                !Distinguishable(k, function, position => HandleClassesDistinguishable(k, function, position)));
             if (clash is not null)
             {
                 if (clash.SourceDocId != function.SourceDocId)
@@ -565,11 +567,56 @@ public sealed class TsClassifier
     }
 
     /// <summary>
+    /// True when both positions carry concrete-class handles of nominally
+    /// disjoint classes: the dispatcher then routes with instanceof tests
+    /// against the concrete wrappers (TypeScript's structural typing would
+    /// otherwise let either instance flow into either overload and fail with
+    /// an invalid cast on the .NET side).
+    /// </summary>
+    private bool HandleClassesDistinguishable(TsFunction a, TsFunction b, int position)
+    {
+        if (HandleDispatchClass(a, position) is not { } classA || HandleDispatchClass(b, position) is not { } classB)
+            return false;
+
+        return classA != classB && !DerivesFrom(classA, classB) && !DerivesFrom(classB, classA);
+    }
+
+    /// <summary>The concrete generated class behind a handle parameter, null for interfaces and non-handles.</summary>
+    private string? HandleDispatchClass(TsFunction function, int position)
+    {
+        if (function.Body is not TsBody.Bridge bridge || position >= bridge.Export.Parameters.Count)
+            return null;
+
+        if (bridge.Export.Parameters[position].Marshal is not BridgeMarshal.Handle handle)
+            return null;
+
+        return index.FindType(handle.CSharpType) is { Kind: ApiTypeKind.Class } apiType ? apiType.FullName : null;
+    }
+
+    private bool DerivesFrom(string derived, string baseName)
+    {
+        var current = index.FindType(derived);
+
+        while (current?.BaseType is { } baseType)
+        {
+            if (baseType.FullName == baseName)
+                return true;
+
+            current = index.FindType(baseType.FullName);
+        }
+
+        return false;
+    }
+
+    /// <summary>
     /// True when the dispatcher can always route between the two overloads:
     /// their arity ranges are disjoint, or every shared argument count has a
-    /// position whose runtime kinds cannot both accept one value.
+    /// position whose runtime kinds cannot both accept one value (or, via
+    /// [positionRefinement], a position-specific test can).
     /// </summary>
-    internal static bool Distinguishable(TsFunction a, TsFunction b)
+    internal static bool Distinguishable(TsFunction a, TsFunction b) => Distinguishable(a, b, null);
+
+    internal static bool Distinguishable(TsFunction a, TsFunction b, Func<int, bool>? positionRefinement)
     {
         var (minA, maxA) = ArityRange(a);
         var (minB, maxB) = ArityRange(b);
@@ -596,6 +643,8 @@ public sealed class TsClassifier
 
                 var bothAcceptNull = testA.Value.AcceptsNull && testB.Value.AcceptsNull;
                 if (!Overlaps(testA.Value.Kind, testB.Value.Kind) && !bothAcceptNull)
+                    distinguished = true;
+                else if (!bothAcceptNull && positionRefinement?.Invoke(position) == true)
                     distinguished = true;
             }
 

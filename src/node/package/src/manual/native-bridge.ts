@@ -93,6 +93,21 @@ function libraryFileName(): string {
     }
 }
 
+/**
+ * The fonts/ directory next to the application entry script, if it exists —
+ * the Node analogue of dropping font files into a .NET publish folder. Every
+ * font found there is registered along with the fonts bundled with the native
+ * runtime (the Lato family).
+ */
+function applicationFontDirectory(): string | null {
+    const entryScript = process.argv[1];
+    if (entryScript === undefined || entryScript.length === 0)
+        return null;
+
+    const directory = path.join(path.dirname(path.resolve(entryScript)), 'fonts');
+    return existsSync(directory) ? directory : null;
+}
+
 function initialize(): BridgeState {
     const directory = libraryDirectory();
     const libraryPath = path.join(directory, libraryFileName());
@@ -107,6 +122,7 @@ function initialize(): BridgeState {
 
     // Handwritten lifecycle exports of QuestPDF.Native (see InteropRuntime.cs).
     const initializeExport = lib.func('QuestPdf_Initialize', 'int32_t', ['str', koffi.pointer(NativeErrorCallback)]);
+    const registerFontDirectoryExport = lib.func('QuestPdf_RegisterFontDirectory', 'void', ['str']);
     const runtime: RuntimeFunctions = {
         releaseHandle: lib.func('QuestPdf_ReleaseHandle', 'void', ['int64_t']),
         registerString: lib.func('QuestPdf_RegisterString', 'int64_t', ['str']),
@@ -123,6 +139,12 @@ function initialize(): BridgeState {
     const rc = initializeExport(directory, errorCallbackRegistration) as number;
     if (rc !== 0)
         throw new Error(`QuestPdf_Initialize failed with code ${rc}`);
+
+    const applicationFonts = applicationFontDirectory();
+    if (applicationFonts !== null) {
+        registerFontDirectoryExport(applicationFonts);
+        Native.check();
+    }
 
     return { functions: declareNativeFunctions(lib), runtime };
 }

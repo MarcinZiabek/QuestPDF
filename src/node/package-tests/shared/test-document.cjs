@@ -4,7 +4,9 @@
 // apps (the TypeScript app carries its own typed copy to validate the shipped
 // declarations). It mirrors the .NET package tests (src/dotnet/package-tests):
 // a Skia-rendered PDF with text and an image, a qpdf document operation
-// (merge + attachment), and an XPS document on Windows.
+// (merge + attachment), and an XPS document on Windows. The Arabic line
+// renders with a font the apps deploy themselves (the fonts/ folder next to
+// the entry script).
 //
 // The questpdf module instance is passed in by the calling app so that it
 // resolves from the app's own node_modules.
@@ -63,6 +65,7 @@ function createMainDocument(questpdf, resources) {
             page.content().column((column) => {
                 column.spacing(10);
                 column.item().text('Lorem ipsum dolor sit amet');
+                column.item().text('مرحبا بالعالم').fontFamily('Noto Sans Arabic');
                 column.item().width(50).image(path.join(resources, 'questpdf-logo.png'));
             });
         });

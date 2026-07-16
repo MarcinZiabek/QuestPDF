@@ -27,8 +27,29 @@ export class DocumentOperation extends NativeObject {
     /**
      * Encrypts the document using 128-bit encryption, applying specified owner and user passwords along with defined permissions.
      */
-    encrypt(encryption: DocumentOperation.Encryption128Bit): DocumentOperation {
-        return new DocumentOperation(Native.checked(Native.lib.QP_DocumentOperation_encrypt_0(this.nativeHandle, encryption.nativeHandle)), NATIVE_HANDLE);
+    encrypt(encryption: DocumentOperation.Encryption128Bit): DocumentOperation;
+    /**
+     * Encrypts the document using 256-bit encryption, applying specified owner and user passwords along with defined permissions.
+     */
+    encrypt(encryption: DocumentOperation.Encryption256Bit): DocumentOperation;
+    /**
+     * Encrypts the document using 40-bit encryption, applying specified owner and user passwords along with defined permissions.
+     */
+    encrypt(encryption: DocumentOperation.Encryption40Bit): DocumentOperation;
+    encrypt(...args: any[]): any {
+        if (args.length === 1 && args[0] instanceof DocumentOperation.Encryption128Bit) {
+            const encryption = args[0] as DocumentOperation.Encryption128Bit;
+            return new DocumentOperation(Native.checked(Native.lib.QP_DocumentOperation_encrypt_0(this.nativeHandle, encryption.nativeHandle)), NATIVE_HANDLE);
+        }
+        if (args.length === 1 && args[0] instanceof DocumentOperation.Encryption256Bit) {
+            const encryption = args[0] as DocumentOperation.Encryption256Bit;
+            return new DocumentOperation(Native.checked(Native.lib.QP_DocumentOperation_encrypt_1(this.nativeHandle, encryption.nativeHandle)), NATIVE_HANDLE);
+        }
+        if (args.length === 1 && args[0] instanceof DocumentOperation.Encryption40Bit) {
+            const encryption = args[0] as DocumentOperation.Encryption40Bit;
+            return new DocumentOperation(Native.checked(Native.lib.QP_DocumentOperation_encrypt_2(this.nativeHandle, encryption.nativeHandle)), NATIVE_HANDLE);
+        }
+        throw new TypeError("No overload of 'encrypt' matches the provided arguments.");
     }
 
     /**

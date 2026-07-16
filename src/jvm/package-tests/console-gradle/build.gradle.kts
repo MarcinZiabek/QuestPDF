@@ -27,6 +27,10 @@ dependencies {
 sourceSets {
     main {
         kotlin.srcDir("../shared/kotlin")
+        // Fonts deployed along with the application (questpdf/fonts/ classpath
+        // convention) — the JVM analogue of CopyToOutputDirectory=PreserveNewest
+        // resources in the .NET package tests.
+        resources.srcDir("../shared/app-resources")
     }
 }
 

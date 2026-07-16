@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm") version "2.4.0"
     `maven-publish`
+    signing
 }
 
 group = "com.questpdf"
@@ -17,7 +18,11 @@ kotlin {
 }
 
 java {
+    // Maven Central requires -sources and -javadoc artifacts for the main jar.
+    // The javadoc jar is empty (Kotlin sources produce no javadoc), which the
+    // Central validation explicitly accepts.
     withSourcesJar()
+    withJavadocJar()
 }
 
 dependencies {
@@ -37,6 +42,20 @@ sourceSets {
         compileClasspath += sourceSets.main.get().output + sourceSets.main.get().compileClasspath
         runtimeClasspath += output + compileClasspath
     }
+
+    // Ports of the .NET documentation examples (src/dotnet/library/
+    // QuestPDF.DocumentationExamples); the images they produce are compared
+    // byte-for-byte against the other runtimes by the port-parity tests.
+    create("docExamples") {
+        kotlin.setSrcDirs(listOf("src/doc-examples/kotlin"))
+        compileClasspath += sourceSets.main.get().output + sourceSets.main.get().compileClasspath
+        runtimeClasspath += output + compileClasspath
+    }
+}
+
+dependencies {
+    "docExamplesImplementation"("org.junit.jupiter:junit-jupiter:5.13.4")
+    "docExamplesRuntimeOnly"("org.junit.platform:junit-platform-launcher:1.13.4")
 }
 
 // ---- native library (dotnet publish, NativeAOT) ----
@@ -136,6 +155,14 @@ val nativesJarTasks = packagedRids.map { rid ->
                 .toList()
 
             check(entries.isNotEmpty()) { "No native files found in $stagedDir." }
+
+            // The runtime registers every font deployed next to the natives;
+            // the bundled Lato family (QuestPDF's default typeface) must ship
+            // with every platform, like the LatoFont folder in the NuGet package.
+            check(entries.any { it.startsWith("LatoFont/") && it.endsWith(".ttf") }) {
+                "The staged native directory $stagedDir does not contain the bundled LatoFont fonts."
+            }
+
             indexFile.writeText(entries.joinToString("\n", postfix = "\n"))
         }
     }
@@ -161,6 +188,12 @@ val feedDir = providers.gradleProperty("questpdfFeedDir")
     .map { rootDir.resolve(it) }
     .getOrElse(repoRoot.resolve("artifacts/maven-feed"))
 
+// Every published jar carries the license text, like the LICENSE.md packed
+// into the NuGet package.
+tasks.withType<Jar>().configureEach {
+    from(repoRoot.resolve("LICENSE.md")) { into("META-INF") }
+}
+
 publishing {
     publications {
         create<MavenPublication>("maven") {
@@ -168,15 +201,36 @@ publishing {
             from(components["java"])
             nativesJarTasks.forEach { artifact(it) }
 
+            // The complete metadata set required by the Maven Central
+            // validation: name, description, url, license, developers and scm.
             pom {
                 name.set("QuestPDF for JVM")
                 description.set("QuestPDF fluent document-generation API for the JVM, backed by the native QuestPDF engine.")
                 url.set("https://www.questpdf.com")
                 licenses {
                     license {
-                        name.set("MIT")
-                        url.set("https://opensource.org/licenses/MIT")
+                        // QuestPDF is dual-licensed (Community / Professional /
+                        // Enterprise); the full text ships as META-INF/LICENSE.md.
+                        name.set("QuestPDF License Agreement")
+                        url.set("https://github.com/QuestPDF/QuestPDF/blob/main/LICENSE.md")
                     }
+                }
+                developers {
+                    developer {
+                        id.set("MarcinZiabek")
+                        name.set("Marcin Ziąbek")
+                        organization.set("CodeFlint")
+                        organizationUrl.set("https://www.questpdf.com")
+                    }
+                }
+                scm {
+                    url.set("https://github.com/QuestPDF/QuestPDF")
+                    connection.set("scm:git:https://github.com/QuestPDF/QuestPDF.git")
+                    developerConnection.set("scm:git:git@github.com:QuestPDF/QuestPDF.git")
+                }
+                issueManagement {
+                    system.set("GitHub")
+                    url.set("https://github.com/QuestPDF/QuestPDF/issues")
                 }
             }
         }
@@ -197,6 +251,21 @@ tasks.withType<GenerateModuleMetadata>().configureEach {
     enabled = false
 }
 
+// Maven Central requires every artifact to be GPG-signed. Signing activates
+// only when a key is supplied (the signingKey / signingPassword properties, or
+// the ORG_GRADLE_PROJECT_signingKey / ORG_GRADLE_PROJECT_signingPassword
+// environment variables of a release pipeline); without one, nothing is signed
+// and the local feed flow is unaffected.
+signing {
+    val signingKey = providers.gradleProperty("signingKey").orNull
+    val signingPassword = providers.gradleProperty("signingPassword").orNull
+
+    if (signingKey != null) {
+        useInMemoryPgpKeys(signingKey, signingPassword)
+        sign(publishing.publications["maven"])
+    }
+}
+
 tasks.register("publishToLocalFeed") {
     group = "publishing"
     description = "Publishes the package (main + staged natives jars) to the local Maven feed directory."
@@ -215,7 +284,39 @@ tasks.register<JavaExec>("runSamples") {
     systemProperty("questpdf.samples.output", layout.buildDirectory.dir("samples-output").get().asFile.absolutePath)
 }
 
-// Samples must always compile as part of a regular build.
+// ---- documentation examples (port-parity tests) ----
+
+tasks.register<Test>("docExamplesTest") {
+    group = "verification"
+    description = "Runs the ported documentation examples; images land in the directory given by QUESTPDF_DOC_EXAMPLES_OUTPUT."
+    testClassesDirs = sourceSets["docExamples"].output.classesDirs
+    classpath = sourceSets["docExamples"].runtimeClasspath
+    useJUnitPlatform()
+
+    // An externally published native runtime (the parity script publishes one
+    // for all suites) wins; otherwise the local publishNative output is used.
+    if (System.getenv("QUESTPDF_NATIVE_DIR") == null) {
+        dependsOn(publishNative)
+        systemProperty("questpdf.native.dir", nativesRoot.resolve(currentRid).absolutePath)
+    }
+
+    environment(
+        "QUESTPDF_DOC_EXAMPLES_OUTPUT",
+        System.getenv("QUESTPDF_DOC_EXAMPLES_OUTPUT")
+            ?: layout.buildDirectory.dir("doc-examples-output").get().asFile.absolutePath,
+    )
+    environment(
+        "QUESTPDF_DOC_EXAMPLES_RESOURCES",
+        System.getenv("QUESTPDF_DOC_EXAMPLES_RESOURCES")
+            ?: repoRoot.resolve("src/dotnet/library/QuestPDF.DocumentationExamples/Resources").absolutePath,
+    )
+
+    // The suite writes files consumed by an external comparison; never skip it.
+    outputs.upToDateWhen { false }
+}
+
+// Samples and documentation examples must always compile as part of a regular build.
 tasks.named("check") {
     dependsOn(tasks.named("compileSamplesKotlin"))
+    dependsOn(tasks.named("compileDocExamplesKotlin"))
 }

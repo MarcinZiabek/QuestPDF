@@ -50,6 +50,17 @@
     </dependencies>
 
     <build>
+        <!-- Fonts deployed along with the application (questpdf/fonts/ classpath
+             convention) — the JVM analogue of CopyToOutputDirectory=PreserveNewest
+             resources in the .NET package tests. -->
+        <resources>
+            <resource>
+                <directory>${project.basedir}/src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>${project.basedir}/../shared/app-resources</directory>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>

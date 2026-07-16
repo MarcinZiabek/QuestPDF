@@ -52,7 +52,50 @@ object NativeBridge {
         val rc = loaded.QuestPdf_Initialize(directory.absolutePath, onError)
         check(rc == 0) { "QuestPdf_Initialize failed with code $rc" }
 
+        registerApplicationFonts(loaded)
+
         return loaded
+    }
+
+    /**
+     * Registers fonts deployed on the application classpath — the JVM analogue
+     * of dropping font files into a .NET publish folder. Any jar may contribute
+     * fonts by shipping a questpdf/fonts/index.txt resource (one path per line,
+     * relative to questpdf/fonts/) next to the font files themselves; every
+     * index on the classpath is honored, like META-INF/services registrations.
+     */
+    private fun registerApplicationFonts(loaded: QuestPdfNative) {
+        val resourceRoot = "questpdf/fonts"
+        val loader = Thread.currentThread().contextClassLoader ?: NativeBridge::class.java.classLoader
+
+        val entries = buildList {
+            for (index in loader.getResources("$resourceRoot/index.txt"))
+                index.openStream().use { stream -> addAll(stream.bufferedReader().readLines()) }
+        }
+            .map(String::trim)
+            .filter { it.isNotEmpty() }
+            .distinct()
+
+        if (entries.isEmpty())
+            return
+
+        val target = Files.createTempDirectory("questpdf-fonts-").toFile()
+        Runtime.getRuntime().addShutdownHook(Thread { target.deleteRecursively() })
+
+        for (entry in entries) {
+            require(!entry.contains("..")) { "Invalid font index entry: $entry" }
+
+            val destination = File(target, entry)
+            destination.parentFile.mkdirs()
+
+            val stream = loader.getResourceAsStream("$resourceRoot/$entry")
+                ?: error("The font index lists $entry, but resource $resourceRoot/$entry is missing.")
+
+            stream.use { input -> destination.outputStream().use { input.copyTo(it) } }
+        }
+
+        loaded.QuestPdf_RegisterFontDirectory(target.absolutePath)
+        check()
     }
 
     /**

@@ -187,7 +187,9 @@ public static unsafe class Interop
     /// Must be called before anything touches QuestPDF. The host process (the
     /// JVM) has its own base directory, so QuestPDF's native Skia dependency
     /// and bundled fonts do not resolve on their own: this installs a resolver
-    /// rooted at the publish directory and registers the bundled Lato fonts.
+    /// rooted at the publish directory and registers every font deployed in it
+    /// (the bundled Lato family plus anything shipped alongside the runtime) —
+    /// the same behavior .NET apps get for their publish folder.
     /// </summary>
     [UnmanagedCallersOnly(EntryPoint = "QuestPdf_Initialize")]
     public static int Initialize(byte* nativeDirectoryUtf8, nint onError)
@@ -204,15 +206,7 @@ public static unsafe class Interop
                 NativeLibrary.SetDllImportResolver(typeof(global::QuestPDF.Settings).Assembly, ResolveNativeDependency);
             }
 
-            var fontDirectory = Path.Combine(nativeDirectory, "LatoFont");
-            if (Directory.Exists(fontDirectory))
-            {
-                foreach (var fontFile in Directory.GetFiles(fontDirectory, "*.ttf").Order(StringComparer.Ordinal))
-                {
-                    using var stream = File.OpenRead(fontFile);
-                    global::QuestPDF.Drawing.FontManager.RegisterFont(stream);
-                }
-            }
+            RegisterFontsFrom(nativeDirectory);
 
             return 0;
         }
@@ -220,6 +214,46 @@ public static unsafe class Interop
         {
             Console.Error.WriteLine("[QuestPDF.Native] initialization failed: " + exception);
             return 1;
+        }
+    }
+
+    /// <summary>
+    /// Registers every font file found under the given directory. Bridges call
+    /// this for fonts deployed along with the host application (the port
+    /// equivalent of dropping font files into a .NET publish folder).
+    /// </summary>
+    [UnmanagedCallersOnly(EntryPoint = "QuestPdf_RegisterFontDirectory")]
+    public static void RegisterFontDirectory(byte* directoryUtf8)
+    {
+        try
+        {
+            var directory = ToStringUtf8(directoryUtf8)
+                ?? throw new ArgumentException("font directory must not be null");
+
+            if (!Directory.Exists(directory))
+                throw new DirectoryNotFoundException($"Font directory does not exist: {directory}");
+
+            RegisterFontsFrom(directory);
+        }
+        catch (Exception exception)
+        {
+            ReportError(exception);
+        }
+    }
+
+    private static void RegisterFontsFrom(string directory)
+    {
+        var supportedExtensions = new[] { ".ttf", ".otf", ".ttc", ".pfb" };
+
+        var fontFiles = Directory
+            .EnumerateFiles(directory, "*.*", SearchOption.AllDirectories)
+            .Where(file => supportedExtensions.Contains(Path.GetExtension(file).ToLowerInvariant()))
+            .Order(StringComparer.Ordinal);
+
+        foreach (var fontFile in fontFiles)
+        {
+            using var stream = File.OpenRead(fontFile);
+            global::QuestPDF.Drawing.FontManager.RegisterFont(stream);
         }
     }
 

@@ -89,13 +89,13 @@ export class TableCellContainerImpl extends ContainerImpl implements ITableCellC
         }
         if (args.length === 1 && typeof args[0] === "number") {
             const value = args[0] as number;
-            return new TableCellContainerImpl(Native.checked(Native.lib.QP_ITableCellContainer_column_0(this.nativeHandle, value)), NATIVE_HANDLE);
+            return new TableCellContainerImpl(Native.checked(Native.lib.QP_ITableCellContainer_column_0(this.nativeHandle, ((value) | 0))), NATIVE_HANDLE);
         }
         throw new TypeError("No overload of 'column' matches the provided arguments.");
     }
 
     columnSpan(value: number): ITableCellContainer {
-        return new TableCellContainerImpl(Native.checked(Native.lib.QP_ITableCellContainer_columnSpan_0(this.nativeHandle, value)), NATIVE_HANDLE);
+        return new TableCellContainerImpl(Native.checked(Native.lib.QP_ITableCellContainer_columnSpan_0(this.nativeHandle, ((value) | 0))), NATIVE_HANDLE);
     }
 
     row(handler: (row: RowDescriptor) => void): void;
@@ -109,12 +109,12 @@ export class TableCellContainerImpl extends ContainerImpl implements ITableCellC
         }
         if (args.length === 1 && typeof args[0] === "number") {
             const value = args[0] as number;
-            return new TableCellContainerImpl(Native.checked(Native.lib.QP_ITableCellContainer_row_0(this.nativeHandle, value)), NATIVE_HANDLE);
+            return new TableCellContainerImpl(Native.checked(Native.lib.QP_ITableCellContainer_row_0(this.nativeHandle, ((value) | 0))), NATIVE_HANDLE);
         }
         throw new TypeError("No overload of 'row' matches the provided arguments.");
     }
 
     rowSpan(value: number): ITableCellContainer {
-        return new TableCellContainerImpl(Native.checked(Native.lib.QP_ITableCellContainer_rowSpan_0(this.nativeHandle, value)), NATIVE_HANDLE);
+        return new TableCellContainerImpl(Native.checked(Native.lib.QP_ITableCellContainer_rowSpan_0(this.nativeHandle, ((value) | 0))), NATIVE_HANDLE);
     }
 }

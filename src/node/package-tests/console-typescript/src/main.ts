@@ -16,6 +16,8 @@ function createMainDocument(resources: string): Document {
             page.content().column((column) => {
                 column.spacing(10);
                 column.item().text('Lorem ipsum dolor sit amet');
+                // Rendered with the font deployed by the build (fonts/ is copied next to the compiled entry script).
+                column.item().text('مرحبا بالعالم').fontFamily('Noto Sans Arabic');
                 column.item().width(50).image(path.join(resources, 'questpdf-logo.png'));
             });
         });

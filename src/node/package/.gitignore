@@ -14,6 +14,10 @@
 # Native package assembly area (scripts/pack-feed.mjs)
 /build/
 
+# Copied from the repository root by scripts/pack-feed.mjs for the duration of
+# the pack; the root LICENSE.md is the single source of truth.
+/LICENSE.md
+
 # JetBrains IDEs (WebStorm / IntelliJ IDEA)
 /.idea/
 

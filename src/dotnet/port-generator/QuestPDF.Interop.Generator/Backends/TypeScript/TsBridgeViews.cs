@@ -45,4 +45,18 @@ public sealed class TsBridgeViews(ApiIndex index, TsTypeMapper mapper)
 
     /// <summary>TypeScript member a generated proxy forwards to (IComponent.Compose → compose).</summary>
     public string ProxyMethodName(ProxyPlan proxy) => TsNameMapper.Member(proxy.CSharpMethodName);
+
+    /// <summary>
+    /// The concrete TypeScript class an overload-dispatch test can check with
+    /// instanceof, or null when the handle is interface-typed (interfaces have
+    /// no runtime constructor, and user implementations would not pass it).
+    /// </summary>
+    public TsType? HandleDispatchType(BridgeMarshal.Handle marshal)
+    {
+        var apiType = index.FindType(marshal.CSharpType);
+
+        return apiType is { Kind: ApiTypeKind.Class }
+            ? TsType.Named(TsNameMapper.Module(apiType.Namespace), index.NestedName(apiType.FullName))
+            : null;
+    }
 }

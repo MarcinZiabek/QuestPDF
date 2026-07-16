@@ -22,6 +22,7 @@ internal fun interface NativeErrorCallback : Callback {
 @Suppress("FunctionName")
 internal interface QuestPdfNativeRuntime : Library {
     fun QuestPdf_Initialize(nativeDirectory: String, onError: NativeErrorCallback): Int
+    fun QuestPdf_RegisterFontDirectory(directory: String)
     fun QuestPdf_ReleaseHandle(handle: Long)
     fun QuestPdf_RegisterString(value: String): Long
     fun QuestPdf_RegisterBuffer(data: ByteArray, length: Int): Long

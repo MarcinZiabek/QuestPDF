@@ -83,6 +83,8 @@ export function declareNativeFunctions(lib: koffi.IKoffiLib) {
         QP_DocumentOperation_addAttachment_0: lib.func('QP_DocumentOperation_addAttachment_0', 'int64_t', ['int64_t', 'int64_t']),
         QP_DocumentOperation_decrypt_0: lib.func('QP_DocumentOperation_decrypt_0', 'int64_t', ['int64_t']),
         QP_DocumentOperation_encrypt_0: lib.func('QP_DocumentOperation_encrypt_0', 'int64_t', ['int64_t', 'int64_t']),
+        QP_DocumentOperation_encrypt_1: lib.func('QP_DocumentOperation_encrypt_1', 'int64_t', ['int64_t', 'int64_t']),
+        QP_DocumentOperation_encrypt_2: lib.func('QP_DocumentOperation_encrypt_2', 'int64_t', ['int64_t', 'int64_t']),
         QP_DocumentOperation_extendMetadata_0: lib.func('QP_DocumentOperation_extendMetadata_0', 'int64_t', ['int64_t', 'str']),
         QP_DocumentOperation_linearize_0: lib.func('QP_DocumentOperation_linearize_0', 'int64_t', ['int64_t']),
         QP_DocumentOperation_mergeFile_0: lib.func('QP_DocumentOperation_mergeFile_0', 'int64_t', ['int64_t', 'str', 'str']),

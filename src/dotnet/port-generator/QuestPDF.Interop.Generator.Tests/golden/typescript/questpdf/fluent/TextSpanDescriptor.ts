@@ -226,7 +226,7 @@ export class TextSpanDescriptor extends NativeObject {
             const handler = args[0] as (textStyle: TextStyle) => TextStyle;
             return new TextSpanDescriptor(Native.checked(Native.lib.QP_TextSpanDescriptor_fallback_1(this.nativeHandle, Native.retain(NativeCallbackJToJ, (p0: number) => Native.guard(0, () => (handler(new TextStyle(p0, NATIVE_HANDLE))).nativeHandle)))), NATIVE_HANDLE);
         }
-        if (args.length <= 1 && (args.length <= 0 || (args[0] === null || args[0] === undefined || args[0] instanceof NativeObject))) {
+        if (args.length <= 1 && (args.length <= 0 || (args[0] === null || args[0] === undefined || args[0] instanceof TextStyle))) {
             const value = (args.length > 0 && args[0] !== undefined ? args[0] : null) as TextStyle | null;
             return new TextSpanDescriptor(Native.checked(Native.lib.QP_TextSpanDescriptor_fallback_0(this.nativeHandle, (value?.nativeHandle ?? 0))), NATIVE_HANDLE);
         }

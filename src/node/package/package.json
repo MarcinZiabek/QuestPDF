@@ -1,13 +1,36 @@
 {
     "name": "questpdf",
     "version": "0.1.0",
-    "description": "QuestPDF fluent API for Node.js: generated TypeScript DSL and koffi bindings over the shared QuestPDF.Native (NativeAOT) library.",
-    "license": "MIT",
+    "description": "QuestPDF is a modern PDF generation library for Node.js. Create invoices, reports, and data exports with a fluent, code-first API — an alternative to HTML-to-PDF conversion. Merge and edit documents, generate PDF/A and accessible PDF/UA files. Source-available with a free Community license.",
+    "keywords": [
+        "pdf",
+        "pdf-generation",
+        "document",
+        "report",
+        "invoice",
+        "export",
+        "merge",
+        "accessibility",
+        "typescript",
+        "fluent",
+        "layout"
+    ],
+    "license": "SEE LICENSE IN LICENSE.md",
+    "author": "Marcin Ziąbek (CodeFlint)",
+    "homepage": "https://www.questpdf.com",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/QuestPDF/QuestPDF.git"
+    },
+    "bugs": {
+        "url": "https://github.com/QuestPDF/QuestPDF/issues"
+    },
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "files": [
         "dist",
-        "!dist/samples"
+        "!dist/samples",
+        "!dist/doc-examples"
     ],
     "engines": {
         "node": ">=18"
@@ -16,7 +39,8 @@
         "build": "tsc",
         "publish-native": "node scripts/publish-native.mjs",
         "pack-feed": "node scripts/pack-feed.mjs",
-        "samples": "npm run build && node dist/samples/run-all.js"
+        "samples": "npm run build && node dist/samples/run-all.js",
+        "doc-examples": "npm run build && node --test \"dist/doc-examples/**/*.test.js\""
     },
     "dependencies": {
         "koffi": "^2.14.1"

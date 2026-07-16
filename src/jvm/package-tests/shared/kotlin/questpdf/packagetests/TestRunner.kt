@@ -11,7 +11,8 @@ import java.io.File
  * The document-generation scenario shared by every package-test app. It mirrors
  * the .NET package tests (src/dotnet/package-tests): a Skia-rendered PDF with
  * text and an image, a qpdf document operation (merge + attachment), and an XPS
- * document on Windows.
+ * document on Windows. The Arabic line renders with a font the apps deploy
+ * themselves (shared/app-resources → the questpdf/fonts/ classpath convention).
  *
  * Test resources (image, attachment) are read from the directory given by the
  * QUESTPDF_TEST_RESOURCES environment variable; documents are written to
@@ -67,6 +68,7 @@ object TestRunner {
                 content().column {
                     spacing(10f)
                     item().text("Lorem ipsum dolor sit amet")
+                    item().text("مرحبا بالعالم").fontFamily("Noto Sans Arabic")
                     item().width(50f).image(File(resources, "questpdf-logo.png").path)
                 }
             }

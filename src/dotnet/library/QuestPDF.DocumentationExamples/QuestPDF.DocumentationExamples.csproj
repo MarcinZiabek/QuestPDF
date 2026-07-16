@@ -32,8 +32,17 @@
         <Using Include="NUnit.Framework"/>
     </ItemGroup>
 
-    <ItemGroup>
+    <!-- The port-parity tests compare images produced by this project against
+         the Kotlin/TypeScript ports, which pin the published QuestPDF package
+         (see src/dotnet/interop). Passing -p:QuestPdfPackageVersion=<version>
+         switches this project to the same engine; without the property, the
+         local project is referenced as always. -->
+    <ItemGroup Condition="'$(QuestPdfPackageVersion)' == ''">
       <ProjectReference Include="..\QuestPDF\QuestPDF.csproj" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(QuestPdfPackageVersion)' != ''">
+      <PackageReference Include="QuestPDF" Version="$(QuestPdfPackageVersion)" />
     </ItemGroup>
 
     <ItemGroup>
